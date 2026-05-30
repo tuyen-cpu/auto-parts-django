@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-label="Auto parts background">
+  <rect width="1200" height="640" fill="#182033"/>
+  <g opacity=".55">
+    <circle cx="870" cy="320" r="170" fill="none" stroke="#d61f2c" stroke-width="34"/>
+    <circle cx="870" cy="320" r="72" fill="none" stroke="#ffffff" stroke-width="24"/>
+    <path d="M700 215h315l70 95v112H663V284c0-38 25-69 37-69z" fill="#f3f6f9"/>
+    <path d="M735 240h130v80H695l40-80zm160 0h95l52 80H895v-80z" fill="#1f5f99"/>
+    <rect x="630" y="402" width="500" height="48" rx="16" fill="#d61f2c"/>
+    <circle cx="742" cy="452" r="58" fill="#101827" stroke="#f3f6f9" stroke-width="18"/>
+    <circle cx="1040" cy="452" r="58" fill="#101827" stroke="#f3f6f9" stroke-width="18"/>
+  </g>
+  <g opacity=".2" fill="#fff">
+    <rect x="150" y="120" width="280" height="28" rx="14"/>
+    <rect x="110" y="184" width="360" height="22" rx="11"/>
+    <rect x="170" y="246" width="230" height="22" rx="11"/>
+  </g>
+</svg>

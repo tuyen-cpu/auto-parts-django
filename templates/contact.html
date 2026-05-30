@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Liên hệ - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block breadcrumb %}
+<nav class="breadcrumb-wrap" aria-label="Breadcrumb">
+    <div class="container breadcrumb">
+        <a href="{% url 'core:home' %}">Trang chủ</a>
+        <span>/</span>
+        <span>Liên hệ</span>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<section class="container contact-layout">
+    <div class="contact-info">
+        <h1>{{ site_setting.site_name|default:"AutoParts Việt" }}</h1>
+        <p><strong>Địa chỉ:</strong> {{ site_setting.address|default:"Đang cập nhật" }}</p>
+        <p><strong>Hotline:</strong> {{ site_setting.hotline|default:"0901 234 567" }}</p>
+        <p><strong>Email:</strong> {{ site_setting.email|default:"sales@autoparts.test" }}</p>
+        {% if site_setting.google_map_iframe %}
+            <div class="map-frame">{{ site_setting.google_map_iframe|safe }}</div>
+        {% endif %}
+    </div>
+    <form class="contact-form" method="post">
+        {% csrf_token %}
+        <h2>Gửi yêu cầu tư vấn</h2>
+        {{ form.full_name }}
+        {{ form.phone }}
+        {{ form.email }}
+        {{ form.message }}
+        {% if form.errors %}
+            <div class="form-errors">{{ form.errors }}</div>
+        {% endif %}
+        <button type="submit">Gửi liên hệ</button>
+    </form>
+</section>
+{% endblock %}

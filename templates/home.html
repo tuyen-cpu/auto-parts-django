@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block title %}Trang chủ - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block content %}
+<section class="container hero-layout">
+    <aside class="category-sidebar">
+        <h2>Danh mục sản phẩm</h2>
+        {% for category in global_categories %}
+            <div class="category-group">
+                <a class="parent-cat" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                {% for child in category.children.all %}
+                    {% if child.is_active %}
+                        <a href="{{ child.get_absolute_url }}">{{ child.name }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </aside>
+    <div class="hero-banner">
+        {% with banner=banners.first %}
+            {% if banner and banner.image %}
+                <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+            {% endif %}
+            <div class="hero-copy">
+                <p>Cửa hàng phụ tùng ô tô</p>
+                <h1>{{ banner.title|default:"Phụ tùng ô tô chính hãng" }}</h1>
+                <span>{{ banner.subtitle|default:"Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng." }}</span>
+                <a href="{{ banner.button_url|default:'/san-pham/' }}">{{ banner.button_text|default:"Xem sản phẩm" }}</a>
+            </div>
+        {% endwith %}
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Danh mục nổi bật</h2>
+        <a href="{% url 'products:list' %}">Tất cả sản phẩm</a>
+    </div>
+    <div class="category-grid">
+        {% for category in parent_categories %}
+            <a class="category-tile" href="{{ category.get_absolute_url }}">
+                <span>{{ category.name }}</span>
+                <small>{{ category.children.count }} nhóm sản phẩm</small>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Sản phẩm nổi bật</h2>
+    </div>
+    <div class="product-grid">
+        {% for product in featured_products %}
+            {% include "includes/product_card.html" %}
+        {% empty %}
+            <p>Chưa có sản phẩm nổi bật.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <h2>Sản phẩm mới</h2>
+    </div>
+    <div class="product-grid">
+        {% for product in new_products %}
+            {% include "includes/product_card.html" %}
+        {% endfor %}
+    </div>
+</section>
+
+<section class="about-strip">
+    <div class="container about-strip-inner">
+        <div>
+            <p>Về chúng tôi</p>
+            <h2>{{ about.title|default:"Đối tác phụ tùng cho gara và chủ xe" }}</h2>
+        </div>
+        <p>{{ about.content|default:"Chúng tôi tập trung vào danh mục phụ tùng phổ biến, giá rõ ràng và tư vấn nhanh qua hotline."|truncatewords:42 }}</p>
+    </div>
+</section>
+{% endblock %}

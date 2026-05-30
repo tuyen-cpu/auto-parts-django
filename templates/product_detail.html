@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% load product_extras %}
+{% block title %}{{ product.name }} - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block breadcrumb %}
+<nav class="breadcrumb-wrap" aria-label="Breadcrumb">
+    <div class="container breadcrumb">
+        <a href="{% url 'core:home' %}">Trang chủ</a>
+        <span>/</span>
+        <a href="{% url 'products:list' %}">Sản phẩm</a>
+        <span>/</span>
+        <a href="{{ product.category.get_absolute_url }}">{{ product.category.name }}</a>
+        <span>/</span>
+        <span>{{ product.name }}</span>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<section class="container detail-layout">
+    <div class="detail-image">
+        {% if product.image %}
+            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+            <span>Auto Part</span>
+        {% endif %}
+    </div>
+    <div class="detail-info">
+        <p class="sku">SKU: {{ product.sku }}</p>
+        <h1>{{ product.name }}</h1>
+        <p>Danh mục: <a href="{{ product.category.get_absolute_url }}">{{ product.category }}</a></p>
+        <div class="detail-price">
+            {% if product.sale_price %}
+                <strong>{{ product.sale_price|vnd }}</strong>
+                <del>{{ product.price|vnd }}</del>
+            {% else %}
+                <strong>{{ product.price|vnd }}</strong>
+            {% endif %}
+        </div>
+        <p>{{ product.short_description }}</p>
+        <div class="cta-row">
+            <a class="primary-button" href="{% url 'contacts:contact' %}?product={{ product.sku }}">Liên hệ báo giá</a>
+            <a class="secondary-button" href="tel:{{ site_setting.hotline|default:'0901234567' }}">Gọi ngay</a>
+        </div>
+    </div>
+</section>
+<section class="container section-block product-description">
+    <h2>Mô tả sản phẩm</h2>
+    <p>{{ product.description|linebreaksbr }}</p>
+</section>
+{% if related_products %}
+<section class="container section-block">
+    <div class="section-heading"><h2>Sản phẩm liên quan</h2></div>
+    <div class="product-grid">
+        {% for product in related_products %}
+            {% include "includes/product_card.html" %}
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

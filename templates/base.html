@@ -1,0 +1,170 @@
+{% load static %}
+{% load product_extras %}
+<!doctype html>
+<html lang="vi">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}{{ site_setting.site_name|default:"AutoParts" }}{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+</head>
+<body>
+    <header class="site-header">
+        <div class="topbar">
+            <div class="container topbar-inner">
+                <span>{{ site_setting.address|default:"Phụ tùng ô tô chính hãng" }}</span>
+                <span>Hotline: <strong>{{ site_setting.hotline|default:"0901 234 567" }}</strong></span>
+            </div>
+        </div>
+        <div class="container nav-wrap">
+            <button class="mobile-menu-toggle" type="button" aria-label="Mở menu" aria-controls="mobile-drawer" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+            <a class="brand" href="{% url 'core:home' %}">
+                <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+            </a>
+            <nav class="main-nav">
+                <a class="{% if request.resolver_match.namespace == 'core' %}active{% endif %}" href="{% url 'core:home' %}">Trang chủ</a>
+                <div class="nav-dropdown">
+                    <a class="nav-dropdown-trigger {% if request.resolver_match.namespace == 'products' %}active{% endif %}" href="{% url 'products:list' %}">Sản phẩm</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="{% url 'products:list' %}">Tất cả sản phẩm</a>
+                        {% for category in global_categories %}
+                            <div class="dropdown-category">
+                                <a class="dropdown-parent" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                <div class="dropdown-submenu">
+                                    {% for child in category.children.all %}
+                                        {% if child.is_active %}
+                                            <a href="{{ child.get_absolute_url }}">{{ child.name }}</a>
+                                        {% endif %}
+                                    {% empty %}
+                                        <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <a class="{% if request.resolver_match.namespace == 'pages' %}active{% endif %}" href="{% url 'pages:about' %}">Giới thiệu</a>
+                <a class="{% if request.resolver_match.namespace == 'contacts' %}active{% endif %}" href="{% url 'contacts:contact' %}">Liên hệ</a>
+            </nav>
+            <div class="consultation-actions">
+                <a href="{% url 'contacts:contact' %}">
+                    <span>Liên hệ tư vấn</span>
+                    <strong>{{ site_setting.hotline|default:"097 3333 217" }}</strong>
+                </a>
+                <a href="{% url 'contacts:contact' %}">
+                    <span>Liên hệ đặt hàng</span>
+                    <strong>{{ site_setting.hotline|default:"097 3333 217" }}</strong>
+                </a>
+            </div>
+        </div>
+        <div class="mobile-drawer-overlay" data-close-menu></div>
+        <aside class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
+            <div class="mobile-drawer-head">
+                <a class="mobile-drawer-brand" href="{% url 'core:home' %}">
+                    <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                </a>
+                <button class="mobile-menu-close" type="button" aria-label="Đóng menu" data-close-menu>×</button>
+            </div>
+            <nav class="mobile-drawer-nav">
+                <a href="{% url 'core:home' %}">Trang chủ</a>
+                <details class="mobile-nav-group">
+                    <summary>Sản phẩm</summary>
+                    <div class="mobile-subnav">
+                        <a href="{% url 'products:list' %}">Tất cả sản phẩm</a>
+                        {% for category in global_categories %}
+                            <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                            {% for child in category.children.all %}
+                                {% if child.is_active %}
+                                    <a class="child-link" href="{{ child.get_absolute_url }}">{{ child.name }}</a>
+                                {% endif %}
+                            {% endfor %}
+                        {% endfor %}
+                    </div>
+                </details>
+                <a href="{% url 'pages:about' %}">Giới thiệu</a>
+                <a href="{% url 'contacts:contact' %}">Liên hệ</a>
+            </nav>
+        </aside>
+        <div class="container search-row">
+            <form class="search-form" action="{% url 'products:list' %}" method="get">
+                <input type="search" name="q" value="{{ q }}" placeholder="Tìm phụ tùng theo tên hoặc SKU">
+                <button type="submit">Tìm kiếm</button>
+            </form>
+        </div>
+    </header>
+
+    {% if messages %}
+        <div class="container messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% block breadcrumb %}{% endblock %}
+
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div>
+                <h3>{{ site_setting.site_name|default:"AutoParts Việt" }}</h3>
+                <p>{{ site_setting.address|default:"Địa chỉ công ty" }}</p>
+            </div>
+            <div>
+                <h3>Danh mục</h3>
+                {% for category in global_categories|slice:":5" %}
+                    <a href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                {% endfor %}
+            </div>
+            <div>
+                <h3>Liên hệ</h3>
+                <p>{{ site_setting.hotline|default:"0901 234 567" }}</p>
+                <p>{{ site_setting.email|default:"sales@autoparts.test" }}</p>
+            </div>
+        </div>
+    </footer>
+    <script>
+        const siteHeader = document.querySelector('.site-header');
+
+        let isHeaderSticky = false;
+
+        function updateStickyHeader() {
+            if (!isHeaderSticky && window.scrollY > 140) {
+                isHeaderSticky = true;
+                siteHeader.classList.add('is-sticky');
+            } else if (isHeaderSticky && window.scrollY <= 0) {
+                isHeaderSticky = false;
+                siteHeader.classList.remove('is-sticky');
+            }
+        }
+
+        updateStickyHeader();
+        window.addEventListener('scroll', updateStickyHeader, { passive: true });
+
+        const menuToggle = document.querySelector('.mobile-menu-toggle');
+        const mobileDrawer = document.querySelector('.mobile-drawer');
+        const closeMenuButtons = document.querySelectorAll('[data-close-menu]');
+
+        function setMobileMenu(open) {
+            document.body.classList.toggle('menu-open', open);
+            menuToggle?.setAttribute('aria-expanded', open ? 'true' : 'false');
+            mobileDrawer?.setAttribute('aria-hidden', open ? 'false' : 'true');
+        }
+
+        menuToggle?.addEventListener('click', () => setMobileMenu(true));
+        closeMenuButtons.forEach((button) => {
+            button.addEventListener('click', () => setMobileMenu(false));
+        });
+    </script>
+</body>
+</html>

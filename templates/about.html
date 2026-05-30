@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}Giới thiệu - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block breadcrumb %}
+<nav class="breadcrumb-wrap" aria-label="Breadcrumb">
+    <div class="container breadcrumb">
+        <a href="{% url 'core:home' %}">Trang chủ</a>
+        <span>/</span>
+        <span>Giới thiệu</span>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<section class="container content-page">
+    <div>
+        <h1>{{ page.title|default:"Giới thiệu công ty" }}</h1>
+        <div class="rich-text">
+            {{ page.content|default:"Nội dung giới thiệu có thể chỉnh sửa trong Django Admin."|linebreaks }}
+        </div>
+    </div>
+    <div class="content-image">
+        {% if page.image %}
+            <img src="{{ page.image.url }}" alt="{{ page.title }}">
+        {% else %}
+            <span>AutoParts</span>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

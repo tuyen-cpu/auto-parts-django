@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Sản phẩm - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block breadcrumb %}
+<nav class="breadcrumb-wrap" aria-label="Breadcrumb">
+    <div class="container breadcrumb">
+        <a href="{% url 'core:home' %}">Trang chủ</a>
+        <span>/</span>
+        {% if current_category %}
+            <a href="{% url 'products:list' %}">Sản phẩm</a>
+            <span>/</span>
+            <span>{{ current_category.name }}</span>
+        {% else %}
+            <span>Sản phẩm</span>
+        {% endif %}
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<section class="container page-title">
+    <h1>{% if current_category %}{{ current_category.name }}{% else %}Tất cả sản phẩm{% endif %}</h1>
+</section>
+
+<section class="container catalog-layout">
+    <aside class="category-sidebar">
+        <h2>Danh mục</h2>
+        <a class="parent-cat{% if not current_category %} active{% endif %}" href="{% url 'products:list' %}">Tất cả</a>
+        {% for category in categories %}
+            <div class="category-group">
+                <a class="parent-cat{% if current_category == category %} active{% endif %}" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
+                {% for child in category.children.all %}
+                    {% if child.is_active %}
+                        <a class="{% if current_category == child %}active{% endif %}" href="{{ child.get_absolute_url }}">{{ child.name }}</a>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% endfor %}
+    </aside>
+    <div>
+        <div class="product-grid">
+            {% for product in products %}
+                {% include "includes/product_card.html" %}
+            {% empty %}
+                <p>Không tìm thấy sản phẩm phù hợp.</p>
+            {% endfor %}
+        </div>
+        {% if is_paginated %}
+            <nav class="pagination">
+                {% for page_number in page_range %}
+                    {% if page_number == page_obj.paginator.ELLIPSIS %}
+                        <span class="dots">{{ page_number }}</span>
+                    {% elif page_number == page_obj.number %}
+                        <span class="current">{{ page_number }}</span>
+                    {% else %}
+                        <a href="?page={{ page_number }}&q={{ q }}&sort={{ sort }}">{{ page_number }}</a>
+                    {% endif %}
+                {% endfor %}
+                {% if page_obj.has_next %}
+                    <a class="next-page" href="?page={{ page_obj.next_page_number }}&q={{ q }}&sort={{ sort }}">›</a>
+                {% endif %}
+            </nav>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
