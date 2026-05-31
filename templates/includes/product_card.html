@@ -10,13 +10,12 @@
     <div class="product-info">
         <p class="sku">{{ product.sku }}</p>
         <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
-        {% if product.rating %}
-            <div class="rating">★★★★★ <span>{{ product.rating }}</span></div>
-        {% endif %}
         <div class="price-row">
             {% if product.sale_price %}
                 <strong>{{ product.sale_price|vnd }}</strong>
-                <del>{{ product.price|vnd }}</del>
+                {% if product.price %}
+                    <del>{{ product.price|vnd }}</del>
+                {% endif %}
             {% else %}
                 <strong>{{ product.price|vnd }}</strong>
             {% endif %}

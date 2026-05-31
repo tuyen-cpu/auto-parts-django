@@ -44,8 +44,16 @@ class RestrictedGroupAdmin(NoManagerAuthMixin, GroupAdmin):
 
 @admin.register(SiteSetting)
 class SiteSettingAdmin(admin.ModelAdmin):
-    list_display = ('site_name', 'hotline', 'email', 'address')
-    search_fields = ('site_name', 'hotline', 'email', 'address')
+    list_display = ('site_name', 'slogan', 'hotline', 'email', 'address')
+    search_fields = ('site_name', 'slogan', 'hotline', 'email', 'address')
+    fieldsets = (
+        ('Thông tin chung', {
+            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address'),
+        }),
+        ('Liên kết và bản đồ', {
+            'fields': ('facebook_url', 'zalo_url', 'google_map_iframe'),
+        }),
+    )
 
     def has_add_permission(self, request):
         if SiteSetting.objects.exists():
@@ -55,9 +63,10 @@ class SiteSettingAdmin(admin.ModelAdmin):
 
 @admin.register(Banner)
 class BannerAdmin(admin.ModelAdmin):
-    list_display = ('title', 'is_active', 'sort_order')
+    list_display = ('title', 'eyebrow', 'is_active', 'sort_order')
     list_filter = ('is_active',)
-    search_fields = ('title', 'subtitle')
+    search_fields = ('eyebrow', 'title', 'subtitle')
+    fields = ('eyebrow', 'title', 'subtitle', 'image', 'button_text', 'button_url', 'is_active', 'sort_order')
     list_editable = ('is_active', 'sort_order')
 
 # Register your models here.

@@ -35,7 +35,7 @@ class Product(models.Model):
     sku = models.CharField('mã sản phẩm/SKU', max_length=80, unique=True)
     category = models.ForeignKey(Category, verbose_name='danh mục', related_name='products', on_delete=models.PROTECT)
     image = models.ImageField('ảnh sản phẩm', upload_to='products/', blank=True)
-    price = models.DecimalField('giá', max_digits=12, decimal_places=0)
+    price = models.DecimalField('giá', max_digits=12, decimal_places=0, null=True, blank=True)
     sale_price = models.DecimalField('giá khuyến mãi', max_digits=12, decimal_places=0, null=True, blank=True)
     rating = models.DecimalField('rating', max_digits=2, decimal_places=1, null=True, blank=True)
     short_description = models.CharField('mô tả ngắn', max_length=255, blank=True)

@@ -9,7 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260531-15">
 </head>
 <body>
     <header class="site-header">
@@ -26,7 +26,15 @@
                 <span></span>
             </button>
             <a class="brand" href="{% url 'core:home' %}">
-                <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                {% if site_setting.logo %}
+                    <img src="{{ site_setting.logo.url }}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                {% else %}
+                    <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                {% endif %}
+                <span class="brand-copy">
+                    <strong>CÔNG TY TNHH XUẤT NHẬP KHẨU TTQ MIỀN NAM</strong>
+                    <small>{{ site_setting.slogan|default:"Phụ tùng chính hãng - Đồng hành mọi hành trình" }}</small>
+                </span>
             </a>
             <nav class="main-nav">
                 <a class="{% if request.resolver_match.namespace == 'core' %}active{% endif %}" href="{% url 'core:home' %}">Trang chủ</a>
@@ -50,9 +58,14 @@
                         {% endfor %}
                     </div>
                 </div>
+                <a class="{% if request.resolver_match.url_name == 'promotion' %}active{% endif %}" href="{% url 'promotion' %}">Khuyến mãi</a>
                 <a class="{% if request.resolver_match.namespace == 'pages' %}active{% endif %}" href="{% url 'pages:about' %}">Giới thiệu</a>
                 <a class="{% if request.resolver_match.namespace == 'contacts' %}active{% endif %}" href="{% url 'contacts:contact' %}">Liên hệ</a>
             </nav>
+            <form class="search-form header-search-form" action="{% url 'products:list' %}" method="get">
+                <input type="search" name="q" value="{{ q }}" placeholder="Tìm phụ tùng theo tên hoặc SKU">
+                <button type="submit">Tìm kiếm</button>
+            </form>
             <div class="consultation-actions">
                 <a href="{% url 'contacts:contact' %}">
                     <span>Liên hệ tư vấn</span>
@@ -68,7 +81,11 @@
         <aside class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
             <div class="mobile-drawer-head">
                 <a class="mobile-drawer-brand" href="{% url 'core:home' %}">
-                    <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                    {% if site_setting.logo %}
+                        <img src="{{ site_setting.logo.url }}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                    {% else %}
+                        <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
+                    {% endif %}
                 </a>
                 <button class="mobile-menu-close" type="button" aria-label="Đóng menu" data-close-menu>×</button>
             </div>
@@ -88,16 +105,11 @@
                         {% endfor %}
                     </div>
                 </details>
+                <a href="{% url 'promotion' %}">Khuyến mãi</a>
                 <a href="{% url 'pages:about' %}">Giới thiệu</a>
                 <a href="{% url 'contacts:contact' %}">Liên hệ</a>
             </nav>
         </aside>
-        <div class="container search-row">
-            <form class="search-form" action="{% url 'products:list' %}" method="get">
-                <input type="search" name="q" value="{{ q }}" placeholder="Tìm phụ tùng theo tên hoặc SKU">
-                <button type="submit">Tìm kiếm</button>
-            </form>
-        </div>
     </header>
 
     {% if messages %}
@@ -113,6 +125,24 @@
     <main>
         {% block content %}{% endblock %}
     </main>
+
+    <div class="floating-contact" aria-label="Liên hệ nhanh">
+        {% if site_setting.zalo_url %}
+            <a class="floating-contact-button zalo" href="{{ site_setting.zalo_url }}" target="_blank" rel="noopener" aria-label="Chat Zalo">
+                <span class="floating-contact-icon" aria-hidden="true"></span>
+            </a>
+        {% endif %}
+        {% if site_setting.facebook_url %}
+            <a class="floating-contact-button messenger" href="{{ site_setting.facebook_url }}" target="_blank" rel="noopener" aria-label="Chat Messenger">
+                <span class="floating-contact-icon" aria-hidden="true"></span>
+            </a>
+        {% endif %}
+        {% if site_setting.hotline %}
+            <a class="floating-contact-button phone" href="tel:{{ site_setting.hotline }}" aria-label="Gọi hotline">
+                <span class="floating-contact-icon" aria-hidden="true"></span>
+            </a>
+        {% endif %}
+    </div>
 
     <footer class="site-footer">
         <div class="container footer-grid">
@@ -131,6 +161,12 @@
                 <p>{{ site_setting.hotline|default:"0901 234 567" }}</p>
                 <p>{{ site_setting.email|default:"sales@autoparts.test" }}</p>
             </div>
+            {% if site_setting.google_map_iframe %}
+                <div class="footer-map">
+                    <h3>Bản đồ</h3>
+                    {{ site_setting.google_map_iframe|safe }}
+                </div>
+            {% endif %}
         </div>
     </footer>
     <script>
@@ -166,5 +202,6 @@
             button.addEventListener('click', () => setMobileMenu(false));
         });
     </script>
+    {% block extra_scripts %}{% endblock %}
 </body>
 </html>

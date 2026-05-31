@@ -3,7 +3,14 @@ from django.db import models
 
 class SiteSetting(models.Model):
     site_name = models.CharField('tên website', max_length=160, default='AutoParts')
+    slogan = models.CharField('slogan', max_length=180, blank=True, default='Phụ tùng chính hãng - Đồng hành mọi hành trình')
     logo = models.ImageField('logo', upload_to='site/', blank=True)
+    hero_image = models.ImageField('ảnh banner trang chủ', upload_to='site/', blank=True)
+    hero_eyebrow = models.CharField('dòng giới thiệu nhỏ', max_length=120, blank=True)
+    hero_title = models.CharField('tiêu đề banner', max_length=180, blank=True)
+    hero_description = models.TextField('mô tả banner', blank=True)
+    hero_button_text = models.CharField('chữ nút banner', max_length=80, blank=True)
+    hero_button_url = models.CharField('đường dẫn nút banner', max_length=255, blank=True)
     hotline = models.CharField('hotline', max_length=40, blank=True)
     email = models.EmailField('email', blank=True)
     address = models.CharField('địa chỉ', max_length=255, blank=True)
@@ -20,6 +27,7 @@ class SiteSetting(models.Model):
 
 
 class Banner(models.Model):
+    eyebrow = models.CharField('dòng giới thiệu nhỏ', max_length=120, blank=True)
     title = models.CharField('tiêu đề', max_length=180)
     subtitle = models.CharField('mô tả ngắn', max_length=255, blank=True)
     image = models.ImageField('ảnh banner', upload_to='banners/', blank=True)

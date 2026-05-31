@@ -18,11 +18,14 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from pages import views as page_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include('core.urls')),
     path('san-pham/', include('products.urls')),
+    path('khuyen-mai/', page_views.promotion, name='promotion'),
+    path('khuyen-mai/<slug:slug>/', page_views.promotion_detail, name='promotion_detail'),
     path('gioi-thieu/', include('pages.urls')),
     path('lien-he/', include('contacts.urls')),
 ]

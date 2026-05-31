@@ -30,7 +30,9 @@
         <div class="detail-price">
             {% if product.sale_price %}
                 <strong>{{ product.sale_price|vnd }}</strong>
-                <del>{{ product.price|vnd }}</del>
+                {% if product.price %}
+                    <del>{{ product.price|vnd }}</del>
+                {% endif %}
             {% else %}
                 <strong>{{ product.price|vnd }}</strong>
             {% endif %}

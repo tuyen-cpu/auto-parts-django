@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Khuyến mãi - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block breadcrumb %}
+<nav class="breadcrumb-wrap" aria-label="Breadcrumb">
+    <div class="container breadcrumb">
+        <a href="{% url 'core:home' %}">Trang chủ</a>
+        <span>/</span>
+        <span>Khuyến mãi</span>
+    </div>
+</nav>
+{% endblock %}
+{% block content %}
+<section class="container page-title">
+    <h1>Khuyến mãi</h1>
+</section>
+
+<section class="container section-block">
+    <div class="promotion-grid">
+        {% for post in posts %}
+            <article class="promotion-card">
+                <a class="promotion-image" href="{{ post.get_absolute_url }}">
+                    {% if post.image %}
+                        <img src="{{ post.image.url }}" alt="{{ post.title }}">
+                    {% else %}
+                        <span>Khuyến mãi</span>
+                    {% endif %}
+                </a>
+                <div class="promotion-info">
+                    <h2><a href="{{ post.get_absolute_url }}">{{ post.title }}</a></h2>
+                    {% if post.summary %}
+                        <p>{{ post.summary }}</p>
+                    {% else %}
+                        <p>{{ post.content|truncatewords:28 }}</p>
+                    {% endif %}
+                    <a class="read-more" href="{{ post.get_absolute_url }}">Xem chi tiết</a>
+                </div>
+            </article>
+        {% empty %}
+            <p>Chưa có chương trình khuyến mãi.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}

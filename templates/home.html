@@ -3,7 +3,7 @@
 {% block content %}
 <section class="container hero-layout">
     <aside class="category-sidebar">
-        <h2>Danh mục sản phẩm</h2>
+        <h2>Danh mục</h2>
         {% for category in global_categories %}
             <div class="category-group">
                 <a class="parent-cat" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
@@ -15,18 +15,40 @@
             </div>
         {% endfor %}
     </aside>
-    <div class="hero-banner">
-        {% with banner=banners.first %}
-            {% if banner and banner.image %}
-                <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
-            {% endif %}
-            <div class="hero-copy">
-                <p>Cửa hàng phụ tùng ô tô</p>
-                <h1>{{ banner.title|default:"Phụ tùng ô tô chính hãng" }}</h1>
-                <span>{{ banner.subtitle|default:"Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng." }}</span>
-                <a href="{{ banner.button_url|default:'/san-pham/' }}">{{ banner.button_text|default:"Xem sản phẩm" }}</a>
+    <div class="hero-banner" data-hero-slider>
+        {% if banners %}
+            {% for banner in banners %}
+                <article class="hero-slide{% if forloop.first %} is-active{% endif %}" data-hero-slide>
+                    {% if banner.image %}
+                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
+                    {% endif %}
+                    <div class="hero-copy">
+                        <p>{{ banner.eyebrow|default:"Cửa hàng phụ tùng ô tô" }}</p>
+                        <h1>{{ banner.title|default:"Phụ tùng ô tô chính hãng" }}</h1>
+                        <span>{{ banner.subtitle|default:"Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng." }}</span>
+                        <a href="{{ banner.button_url|default:'/san-pham/' }}">{{ banner.button_text|default:"Xem sản phẩm" }}</a>
+                    </div>
+                </article>
+            {% endfor %}
+        {% else %}
+            <article class="hero-slide is-active" data-hero-slide>
+                <div class="hero-copy">
+                    <p>Cửa hàng phụ tùng ô tô</p>
+                    <h1>Phụ tùng ô tô chính hãng</h1>
+                    <span>Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng.</span>
+                    <a href="/san-pham/">Xem sản phẩm</a>
+                </div>
+            </article>
+        {% endif %}
+        {% if banners|length > 1 %}
+            <button class="hero-slider-control prev" type="button" data-hero-prev aria-label="Banner trước">‹</button>
+            <button class="hero-slider-control next" type="button" data-hero-next aria-label="Banner sau">›</button>
+            <div class="hero-slider-dots" aria-label="Chọn banner">
+                {% for banner in banners %}
+                    <button class="{% if forloop.first %}is-active{% endif %}" type="button" data-hero-dot="{{ forloop.counter0 }}" aria-label="Banner {{ forloop.counter }}"></button>
+                {% endfor %}
             </div>
-        {% endwith %}
+        {% endif %}
     </div>
 </section>
 
@@ -78,4 +100,56 @@
         <p>{{ about.content|default:"Chúng tôi tập trung vào danh mục phụ tùng phổ biến, giá rõ ràng và tư vấn nhanh qua hotline."|truncatewords:42 }}</p>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+    document.querySelectorAll('[data-hero-slider]').forEach((slider) => {
+        const slides = Array.from(slider.querySelectorAll('[data-hero-slide]'));
+        const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
+        const prevButton = slider.querySelector('[data-hero-prev]');
+        const nextButton = slider.querySelector('[data-hero-next]');
+
+        if (slides.length < 2) {
+            return;
+        }
+
+        let activeIndex = 0;
+        let autoTimer;
+
+        function showSlide(index) {
+            activeIndex = (index + slides.length) % slides.length;
+            slides.forEach((slide, slideIndex) => {
+                slide.classList.toggle('is-active', slideIndex === activeIndex);
+            });
+            dots.forEach((dot, dotIndex) => {
+                dot.classList.toggle('is-active', dotIndex === activeIndex);
+            });
+        }
+
+        function startAutoSlide() {
+            window.clearInterval(autoTimer);
+            autoTimer = window.setInterval(() => showSlide(activeIndex + 1), 5000);
+        }
+
+        prevButton?.addEventListener('click', () => {
+            showSlide(activeIndex - 1);
+            startAutoSlide();
+        });
+
+        nextButton?.addEventListener('click', () => {
+            showSlide(activeIndex + 1);
+            startAutoSlide();
+        });
+
+        dots.forEach((dot, dotIndex) => {
+            dot.addEventListener('click', () => {
+                showSlide(dotIndex);
+                startAutoSlide();
+            });
+        });
+
+        startAutoSlide();
+    });
+</script>
 {% endblock %}
