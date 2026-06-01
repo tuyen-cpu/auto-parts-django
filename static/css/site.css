@@ -868,7 +868,7 @@ del {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    gap: 12px;
+    gap: 10px;
     margin-top: 34px;
 }
 
@@ -879,13 +879,19 @@ del {
     min-width: 54px;
     height: 54px;
     padding: 0 14px;
-    border: 2px solid #111827;
-    border-radius: 6px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
     background: var(--white);
-    color: #020617;
+    color: #30343d;
     font-size: 20px;
     font-weight: 800;
     line-height: 1;
+    box-shadow: 0 1px 0 rgba(15, 23, 42, .04);
+    transition:
+        border-color .18s ease,
+        color .18s ease,
+        background .18s ease,
+        box-shadow .18s ease;
 }
 
 .pagination a:hover,
@@ -893,16 +899,26 @@ del {
     border-color: #c8083d;
     color: var(--white) !important;
     background: #c8083d;
+    box-shadow: 0 10px 22px rgba(200, 8, 61, .18);
 }
 
 .pagination .dots {
-    border-color: #111827;
-    color: #020617;
+    border-color: #e5e7eb;
+    color: #30343d;
     background: var(--white);
 }
 
-.pagination .next-page {
-    font-size: 30px;
+.pagination .page-arrow {
+    color: #30343d;
+    font-size: 34px;
+    font-weight: 700;
+}
+
+.pagination .page-arrow.disabled {
+    color: #a8adb5;
+    pointer-events: none;
+    background: var(--white);
+    box-shadow: none;
 }
 
 .detail-layout,
@@ -1037,6 +1053,7 @@ del {
 }
 
 .site-footer {
+    margin-top: 12px;
     padding: 36px 0;
     color: #d9e0ea;
     background: #101827;
@@ -1548,6 +1565,23 @@ del {
     .hero-slider-dots {
         right: 16px;
         bottom: 14px;
+    }
+
+    .pagination {
+        gap: 8px;
+    }
+
+    .pagination a,
+    .pagination span {
+        min-width: 48px;
+        height: 48px;
+        padding: 0 12px;
+        border-radius: 12px;
+        font-size: 18px;
+    }
+
+    .pagination .page-arrow {
+        font-size: 34px;
     }
 
     .detail-info h1 {
