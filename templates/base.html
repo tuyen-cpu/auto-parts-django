@@ -1,5 +1,4 @@
 {% load static %}
-{% load product_extras %}
 <!doctype html>
 <html lang="vi">
 <head>
@@ -9,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260531-18">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260601-16">
 </head>
 <body>
     <header class="site-header">
@@ -32,7 +31,7 @@
                     <img src="{% static 'images/logi.jpg' %}" alt="{{ site_setting.site_name|default:'AutoParts Việt' }}">
                 {% endif %}
                 <span class="brand-copy">
-                    <strong>CÔNG TY TNHH XUẤT NHẬP KHẨU TTQ MIỀN NAM</strong>
+                    <strong>{{ site_setting.site_name|default:"AutoParts" }}</strong>
                     <small>{{ site_setting.slogan|default:"Phụ tùng chính hãng - Đồng hành mọi hành trình" }}</small>
                 </span>
             </a>
@@ -58,7 +57,7 @@
                         {% endfor %}
                     </div>
                 </div>
-                <a class="{% if request.resolver_match.url_name == 'promotion' %}active{% endif %}" href="{% url 'promotion' %}">Khuyến mãi</a>
+                <a class="{% if request.resolver_match.url_name == 'promotion' or request.resolver_match.url_name == 'promotion_detail' %}active{% endif %}" href="{% url 'promotion' %}">Khuyến mãi</a>
                 <a class="{% if request.resolver_match.namespace == 'pages' %}active{% endif %}" href="{% url 'pages:about' %}">Giới thiệu</a>
                 <a class="{% if request.resolver_match.namespace == 'contacts' %}active{% endif %}" href="{% url 'contacts:contact' %}">Liên hệ</a>
             </nav>
@@ -66,16 +65,6 @@
                 <input type="search" name="q" value="{{ q }}" placeholder="Tìm phụ tùng theo tên hoặc SKU">
                 <button type="submit">Tìm kiếm</button>
             </form>
-            <div class="consultation-actions">
-                <a href="{% url 'contacts:contact' %}">
-                    <span>Liên hệ tư vấn</span>
-                    <strong>{{ site_setting.hotline|default:"097 3333 217" }}</strong>
-                </a>
-                <a href="{% url 'contacts:contact' %}">
-                    <span>Liên hệ đặt hàng</span>
-                    <strong>{{ site_setting.hotline|default:"097 3333 217" }}</strong>
-                </a>
-            </div>
         </div>
         <div class="mobile-drawer-overlay" data-close-menu></div>
         <aside class="mobile-drawer" id="mobile-drawer" aria-hidden="true">
@@ -90,9 +79,9 @@
                 <button class="mobile-menu-close" type="button" aria-label="Đóng menu" data-close-menu>×</button>
             </div>
             <nav class="mobile-drawer-nav">
-                <a href="{% url 'core:home' %}">Trang chủ</a>
+                <a class="{% if request.resolver_match.namespace == 'core' %}active{% endif %}" href="{% url 'core:home' %}">Trang chủ</a>
                 <details class="mobile-nav-group">
-                    <summary>Sản phẩm</summary>
+                    <summary class="{% if request.resolver_match.namespace == 'products' %}active{% endif %}">Sản phẩm</summary>
                     <div class="mobile-subnav">
                         <a href="{% url 'products:list' %}">Tất cả sản phẩm</a>
                         {% for category in global_categories %}
@@ -105,9 +94,9 @@
                         {% endfor %}
                     </div>
                 </details>
-                <a href="{% url 'promotion' %}">Khuyến mãi</a>
-                <a href="{% url 'pages:about' %}">Giới thiệu</a>
-                <a href="{% url 'contacts:contact' %}">Liên hệ</a>
+                <a class="{% if request.resolver_match.url_name == 'promotion' or request.resolver_match.url_name == 'promotion_detail' %}active{% endif %}" href="{% url 'promotion' %}">Khuyến mãi</a>
+                <a class="{% if request.resolver_match.namespace == 'pages' %}active{% endif %}" href="{% url 'pages:about' %}">Giới thiệu</a>
+                <a class="{% if request.resolver_match.namespace == 'contacts' %}active{% endif %}" href="{% url 'contacts:contact' %}">Liên hệ</a>
             </nav>
         </aside>
     </header>

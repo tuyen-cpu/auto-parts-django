@@ -1,61 +1,87 @@
 {% extends "base.html" %}
+{% load static %}
 {% block title %}Trang chủ - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
 {% block content %}
-<section class="container hero-layout">
-    <aside class="category-sidebar">
-        <h2>Danh mục</h2>
-        {% for category in global_categories %}
-            <div class="category-group">
-                <a class="parent-cat" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
-                {% for child in category.children.all %}
-                    {% if child.is_active %}
-                        <a href="{{ child.get_absolute_url }}">{{ child.name }}</a>
-                    {% endif %}
-                {% endfor %}
+<section class="home-hero">
+    {% if hero_banner.image %}
+        <img class="home-hero-image" src="{{ hero_banner.image.url }}" alt="{{ hero_banner.title }}">
+    {% else %}
+        <img class="home-hero-image" src="{% static 'images/hero-parts-banner.jpg' %}" alt="{{ hero_banner.title|default:'Phụ tùng ô tô' }}">
+    {% endif %}
+    <div class="container home-hero-inner">
+        <div class="home-hero-copy">
+            <span class="hero-badge"><span></span>{{ hero_banner.eyebrow|default:"Chính hãng · Bảo hành 12 tháng" }}</span>
+            <h1>{{ hero_banner.title|default:"Phụ tùng ô tô đẳng cấp cho mọi hành trình." }}</h1>
+            <p>{{ hero_banner.subtitle|default:"Hơn 10.000 mã phụ tùng chính hãng, sẵn kho cho hầu hết các dòng xe phổ thông và cao cấp. Giao nhanh toàn quốc." }}</p>
+            <div class="hero-actions">
+                <a class="primary-button" href="{{ hero_banner.button_url|default:'/san-pham/' }}">{{ hero_banner.button_text|default:"Xem sản phẩm" }}</a>
+                <a class="secondary-button" href="{% url 'contacts:contact' %}">Tư vấn miễn phí</a>
             </div>
-        {% endfor %}
-    </aside>
-    <div class="hero-banner" data-hero-slider>
-        {% if banners %}
-            {% for banner in banners %}
-                <article class="hero-slide{% if forloop.first %} is-active{% endif %}" data-hero-slide>
-                    {% if banner.image %}
-                        <img src="{{ banner.image.url }}" alt="{{ banner.title }}">
-                    {% endif %}
-                    <div class="hero-copy">
-                        <p>{{ banner.eyebrow|default:"Cửa hàng phụ tùng ô tô" }}</p>
-                        <h1>{{ banner.title|default:"Phụ tùng ô tô chính hãng" }}</h1>
-                        <span>{{ banner.subtitle|default:"Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng." }}</span>
-                        <a href="{{ banner.button_url|default:'/san-pham/' }}">{{ banner.button_text|default:"Xem sản phẩm" }}</a>
-                    </div>
-                </article>
-            {% endfor %}
-        {% else %}
-            <article class="hero-slide is-active" data-hero-slide>
-                <div class="hero-copy">
-                    <p>Cửa hàng phụ tùng ô tô</p>
-                    <h1>Phụ tùng ô tô chính hãng</h1>
-                    <span>Tìm nhanh sản phẩm, xem giá và liên hệ tư vấn đúng mã phụ tùng.</span>
-                    <a href="/san-pham/">Xem sản phẩm</a>
+            <div class="hero-stats">
+                <div>
+                    <strong>10K+</strong>
+                    <span>Mã phụ tùng</span>
                 </div>
-            </article>
-        {% endif %}
-        {% if banners|length > 1 %}
-            <button class="hero-slider-control prev" type="button" data-hero-prev aria-label="Banner trước">‹</button>
-            <button class="hero-slider-control next" type="button" data-hero-next aria-label="Banner sau">›</button>
-            <div class="hero-slider-dots" aria-label="Chọn banner">
-                {% for banner in banners %}
-                    <button class="{% if forloop.first %}is-active{% endif %}" type="button" data-hero-dot="{{ forloop.counter0 }}" aria-label="Banner {{ forloop.counter }}"></button>
-                {% endfor %}
+                <div>
+                    <strong>15+</strong>
+                    <span>Năm kinh nghiệm</span>
+                </div>
+                <div>
+                    <strong>98%</strong>
+                    <span>Khách hài lòng</span>
+                </div>
             </div>
-        {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="container service-grid">
+    <article>
+        <span>✓</span>
+        <h3>100% Chính hãng</h3>
+        <p>Cam kết nguồn gốc rõ ràng, bảo hành minh bạch cho từng sản phẩm.</p>
+    </article>
+    <article>
+        <span>↗</span>
+        <h3>Giao toàn quốc</h3>
+        <p>Giao nhanh tại TP.HCM và hỗ trợ vận chuyển đến các tỉnh thành.</p>
+    </article>
+    <article>
+        <span>⚙</span>
+        <h3>Hỗ trợ lắp đặt</h3>
+        <p>Tư vấn chọn đúng mã phụ tùng theo xe và nhu cầu sử dụng.</p>
+    </article>
+    <article>
+        <span>★</span>
+        <h3>Bảo hành dài</h3>
+        <p>Chính sách bảo hành rõ ràng, đồng hành sau khi mua hàng.</p>
+    </article>
+</section>
+
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <p>Sản phẩm nổi bật</p>
+            <h2>Phụ tùng bán chạy</h2>
+        </div>
+        <a href="{% url 'products:list' %}">Xem tất cả →</a>
+    </div>
+    <div class="product-grid">
+        {% for product in featured_products %}
+            {% include "includes/product_card.html" %}
+        {% empty %}
+            <p>Chưa có sản phẩm nổi bật.</p>
+        {% endfor %}
     </div>
 </section>
 
 <section class="container section-block">
     <div class="section-heading">
-        <h2>Danh mục nổi bật</h2>
-        <a href="{% url 'products:list' %}">Tất cả sản phẩm</a>
+        <div>
+            <p>Danh mục</p>
+            <h2>Tìm theo nhóm phụ tùng</h2>
+        </div>
+        <a href="{% url 'products:list' %}">Tất cả sản phẩm →</a>
     </div>
     <div class="category-grid">
         {% for category in parent_categories %}
@@ -69,20 +95,10 @@
 
 <section class="container section-block">
     <div class="section-heading">
-        <h2>Sản phẩm nổi bật</h2>
-    </div>
-    <div class="product-grid">
-        {% for product in featured_products %}
-            {% include "includes/product_card.html" %}
-        {% empty %}
-            <p>Chưa có sản phẩm nổi bật.</p>
-        {% endfor %}
-    </div>
-</section>
-
-<section class="container section-block">
-    <div class="section-heading">
-        <h2>Sản phẩm mới</h2>
+        <div>
+            <p>Sản phẩm mới</p>
+            <h2>Vừa cập nhật</h2>
+        </div>
     </div>
     <div class="product-grid">
         {% for product in new_products %}
@@ -91,65 +107,11 @@
     </div>
 </section>
 
-<section class="about-strip">
-    <div class="container about-strip-inner">
-        <div>
-            <p>Về chúng tôi</p>
-            <h2>{{ about.title|default:"Đối tác phụ tùng cho gara và chủ xe" }}</h2>
-        </div>
-        <p>{{ about.content|default:"Chúng tôi tập trung vào danh mục phụ tùng phổ biến, giá rõ ràng và tư vấn nhanh qua hotline."|truncatewords:42 }}</p>
+<section class="container home-cta">
+    <div>
+        <h2>Không tìm thấy phụ tùng bạn cần?</h2>
+        <p>Để lại thông tin, đội ngũ kỹ thuật sẽ tư vấn và báo giá trong vòng 30 phút.</p>
+        <a class="primary-button" href="{% url 'contacts:contact' %}">Liên hệ ngay</a>
     </div>
 </section>
-{% endblock %}
-
-{% block extra_scripts %}
-<script>
-    document.querySelectorAll('[data-hero-slider]').forEach((slider) => {
-        const slides = Array.from(slider.querySelectorAll('[data-hero-slide]'));
-        const dots = Array.from(slider.querySelectorAll('[data-hero-dot]'));
-        const prevButton = slider.querySelector('[data-hero-prev]');
-        const nextButton = slider.querySelector('[data-hero-next]');
-
-        if (slides.length < 2) {
-            return;
-        }
-
-        let activeIndex = 0;
-        let autoTimer;
-
-        function showSlide(index) {
-            activeIndex = (index + slides.length) % slides.length;
-            slides.forEach((slide, slideIndex) => {
-                slide.classList.toggle('is-active', slideIndex === activeIndex);
-            });
-            dots.forEach((dot, dotIndex) => {
-                dot.classList.toggle('is-active', dotIndex === activeIndex);
-            });
-        }
-
-        function startAutoSlide() {
-            window.clearInterval(autoTimer);
-            autoTimer = window.setInterval(() => showSlide(activeIndex + 1), 5000);
-        }
-
-        prevButton?.addEventListener('click', () => {
-            showSlide(activeIndex - 1);
-            startAutoSlide();
-        });
-
-        nextButton?.addEventListener('click', () => {
-            showSlide(activeIndex + 1);
-            startAutoSlide();
-        });
-
-        dots.forEach((dot, dotIndex) => {
-            dot.addEventListener('click', () => {
-                showSlide(dotIndex);
-                startAutoSlide();
-            });
-        });
-
-        startAutoSlide();
-    });
-</script>
 {% endblock %}

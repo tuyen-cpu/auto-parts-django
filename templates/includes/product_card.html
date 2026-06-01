@@ -1,24 +1,31 @@
 {% load product_extras %}
+{% load static %}
 <article class="product-card">
     <a class="product-image" href="{{ product.get_absolute_url }}">
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}">
         {% else %}
-            <span>Auto Part</span>
+            <img src="{% static 'images/product.png' %}" alt="{{ product.name }}">
         {% endif %}
     </a>
     <div class="product-info">
-        <p class="sku">{{ product.sku }}</p>
+        <p class="sku">{{ product.category.name }}</p>
         <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
+        {% if product.short_description %}
+            <p class="product-summary">{{ product.short_description }}</p>
+        {% endif %}
         <div class="price-row">
             {% if product.sale_price %}
                 <strong>{{ product.sale_price|vnd }}</strong>
                 {% if product.price %}
                     <del>{{ product.price|vnd }}</del>
                 {% endif %}
-            {% else %}
+            {% elif product.price %}
                 <strong>{{ product.price|vnd }}</strong>
+            {% else %}
+                <strong>Giá: Liên hệ</strong>
             {% endif %}
+            <a class="product-link" href="{{ product.get_absolute_url }}">Chi tiết</a>
         </div>
     </div>
 </article>

@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load product_extras %}
+{% load static %}
 {% block title %}{{ product.name }} - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
 {% block breadcrumb %}
 <nav class="breadcrumb-wrap" aria-label="Breadcrumb">
@@ -20,7 +21,7 @@
         {% if product.image %}
             <img src="{{ product.image.url }}" alt="{{ product.name }}">
         {% else %}
-            <span>Auto Part</span>
+            <img src="{% static 'images/product.png' %}" alt="{{ product.name }}">
         {% endif %}
     </div>
     <div class="detail-info">
@@ -33,8 +34,10 @@
                 {% if product.price %}
                     <del>{{ product.price|vnd }}</del>
                 {% endif %}
-            {% else %}
+            {% elif product.price %}
                 <strong>{{ product.price|vnd }}</strong>
+            {% else %}
+                <strong>Giá: Liên hệ</strong>
             {% endif %}
         </div>
         <p>{{ product.short_description }}</p>

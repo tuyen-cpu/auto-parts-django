@@ -87,6 +87,13 @@ DEBUG = env_bool('DEBUG', True)
 
 ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost', 'testserver'])
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE', not DEBUG)
+CSRF_COOKIE_SECURE = env_bool('CSRF_COOKIE_SECURE', not DEBUG)
+SECURE_SSL_REDIRECT = env_bool('SECURE_SSL_REDIRECT', False)
+SECURE_HSTS_SECONDS = int(os.environ.get('SECURE_HSTS_SECONDS', '0' if DEBUG else '31536000'))
+SECURE_HSTS_INCLUDE_SUBDOMAINS = env_bool('SECURE_HSTS_INCLUDE_SUBDOMAINS', not DEBUG)
+SECURE_HSTS_PRELOAD = env_bool('SECURE_HSTS_PRELOAD', False)
 
 # Application definition
 
@@ -103,8 +110,12 @@ INSTALLED_APPS = [
     'contacts',
 ]
 
+if env_bool('USE_R2_STORAGE', False):
+    INSTALLED_APPS.append('storages')
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -182,9 +193,45 @@ USE_TZ = True
 
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'static']
+STATIC_ROOT = BASE_DIR / 'staticfiles'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+USE_R2_STORAGE = env_bool('USE_R2_STORAGE', False)
+if USE_R2_STORAGE:
+    R2_ACCOUNT_ID = os.environ['R2_ACCOUNT_ID']
+    R2_BUCKET_NAME = os.environ['R2_BUCKET_NAME']
+    R2_CUSTOM_DOMAIN = os.environ.get('R2_CUSTOM_DOMAIN', '').strip()
+    R2_LOCATION = os.environ.get('R2_LOCATION', 'media').strip('/')
+    R2_ENDPOINT_URL = os.environ.get('R2_ENDPOINT_URL') or f'https://{R2_ACCOUNT_ID}.r2.cloudflarestorage.com'
+
+    STORAGES = {
+        'default': {
+            'BACKEND': 'storages.backends.s3.S3Storage',
+            'OPTIONS': {
+                'access_key': os.environ['R2_ACCESS_KEY_ID'],
+                'secret_key': os.environ['R2_SECRET_ACCESS_KEY'],
+                'bucket_name': R2_BUCKET_NAME,
+                'endpoint_url': R2_ENDPOINT_URL,
+                'region_name': os.environ.get('R2_REGION_NAME', 'auto'),
+                'location': R2_LOCATION,
+                'default_acl': None,
+                'file_overwrite': False,
+                'querystring_auth': env_bool('R2_QUERYSTRING_AUTH', False),
+            },
+        },
+        'staticfiles': {
+            'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
+        },
+    }
+
+    if R2_CUSTOM_DOMAIN:
+        STORAGES['default']['OPTIONS']['custom_domain'] = R2_CUSTOM_DOMAIN
+        MEDIA_URL = f'https://{R2_CUSTOM_DOMAIN}/{R2_LOCATION}/'
+    else:
+        MEDIA_URL = f'{R2_ENDPOINT_URL}/{R2_BUCKET_NAME}/{R2_LOCATION}/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field

@@ -8,15 +8,17 @@ from .models import Banner
 
 def home(request):
     banners = Banner.objects.filter(is_active=True)
+    hero_banner = banners.first()
     parent_categories = Category.objects.filter(is_active=True, parent__isnull=True)[:8]
-    featured_products = Product.objects.filter(is_active=True, is_featured=True).select_related('category')[:8]
-    new_products = Product.objects.filter(is_active=True).select_related('category')[:8]
+    featured_products = Product.objects.filter(is_active=True, is_featured=True).select_related('category')[:9]
+    new_products = Product.objects.filter(is_active=True).select_related('category')[:9]
     about = AboutPage.objects.first()
     return render(
         request,
         'home.html',
         {
             'banners': banners,
+            'hero_banner': hero_banner,
             'parent_categories': parent_categories,
             'featured_products': featured_products,
             'new_products': new_products,

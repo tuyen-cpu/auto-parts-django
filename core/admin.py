@@ -66,7 +66,17 @@ class BannerAdmin(admin.ModelAdmin):
     list_display = ('title', 'eyebrow', 'is_active', 'sort_order')
     list_filter = ('is_active',)
     search_fields = ('eyebrow', 'title', 'subtitle')
-    fields = ('eyebrow', 'title', 'subtitle', 'image', 'button_text', 'button_url', 'is_active', 'sort_order')
+    fieldsets = (
+        ('Nội dung banner trang chủ', {
+            'fields': ('eyebrow', 'title', 'subtitle', 'image'),
+        }),
+        ('Nút hành động', {
+            'fields': ('button_text', 'button_url'),
+        }),
+        ('Hiển thị', {
+            'fields': ('is_active', 'sort_order'),
+        }),
+    )
     list_editable = ('is_active', 'sort_order')
 
 # Register your models here.
