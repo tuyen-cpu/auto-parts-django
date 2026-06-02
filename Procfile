@@ -1,0 +1,1 @@
+web: gunicorn autoparts_site.wsgi
