@@ -51,7 +51,7 @@ class SiteSettingAdmin(admin.ModelAdmin):
             'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address'),
         }),
         ('Liên kết và bản đồ', {
-            'fields': ('facebook_url', 'zalo_url', 'google_map_iframe'),
+            'fields': ('facebook_url', 'zalo_url', 'tiktok_url', 'google_map_iframe'),
         }),
     )
 

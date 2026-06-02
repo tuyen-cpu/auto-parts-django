@@ -60,4 +60,20 @@ class Product(models.Model):
     def display_price(self):
         return self.sale_price or self.price
 
+
+class ProductImage(models.Model):
+    product = models.ForeignKey(Product, verbose_name='sản phẩm', related_name='gallery_images', on_delete=models.CASCADE)
+    image = models.ImageField('ảnh sản phẩm', upload_to='products/gallery/')
+    alt_text = models.CharField('mô tả ảnh', max_length=180, blank=True)
+    sort_order = models.PositiveIntegerField('thứ tự', default=0)
+    created_at = models.DateTimeField('ngày tạo', auto_now_add=True)
+
+    class Meta:
+        ordering = ['sort_order', 'id']
+        verbose_name = 'ảnh sản phẩm'
+        verbose_name_plural = 'ảnh sản phẩm'
+
+    def __str__(self):
+        return self.alt_text or f'Ảnh {self.product.name}'
+
 # Create your models here.

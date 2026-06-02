@@ -11,9 +11,7 @@
     <div class="product-info">
         <p class="sku">{{ product.category.name }}</p>
         <h3><a href="{{ product.get_absolute_url }}">{{ product.name }}</a></h3>
-        {% if product.short_description %}
-            <p class="product-summary">{{ product.short_description }}</p>
-        {% endif %}
+        <p class="product-summary">{{ product.short_description|default:"" }}</p>
         <div class="price-row">
             {% if product.sale_price %}
                 <strong>{{ product.sale_price|vnd }}</strong>
@@ -23,7 +21,11 @@
             {% elif product.price %}
                 <strong>{{ product.price|vnd }}</strong>
             {% else %}
-                <strong>Giá: Liên hệ</strong>
+                {% if site_setting.hotline %}
+                    <strong>Liên hệ: {{ site_setting.hotline }}</strong>
+                {% else %}
+                    <strong>Liên hệ</strong>
+                {% endif %}
             {% endif %}
             <a class="product-link" href="{{ product.get_absolute_url }}">Chi tiết</a>
         </div>

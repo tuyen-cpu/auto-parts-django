@@ -4,7 +4,7 @@ from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
 from django.views.generic import DetailView, ListView
 
-from .models import Category, Product
+from .models import Category, Product, ProductImage
 
 
 def normalize_search_text(value):
@@ -76,10 +76,11 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
     def get_queryset(self):
-        return Product.objects.filter(is_active=True).select_related('category', 'category__parent')
+        return Product.objects.filter(is_active=True).select_related('category', 'category__parent').prefetch_related('gallery_images')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+        context['gallery_images'] = ProductImage.objects.filter(product=self.object)
         context['related_products'] = Product.objects.filter(
             is_active=True,
             category=self.object.category,

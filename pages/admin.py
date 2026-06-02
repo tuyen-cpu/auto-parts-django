@@ -3,6 +3,7 @@ from django.core.files.storage import default_storage
 from django.http import JsonResponse
 from django.urls import path
 from django.utils import timezone
+from django.views.decorators.csrf import csrf_exempt
 
 import uuid
 
@@ -34,7 +35,7 @@ class AboutPageAdmin(admin.ModelAdmin):
         custom_urls = [
             path(
                 'ckeditor-upload/',
-                self.admin_site.admin_view(self.ckeditor_upload),
+                self.admin_site.admin_view(csrf_exempt(self.ckeditor_upload)),
                 name='pages_aboutpage_ckeditor_upload',
             ),
         ]

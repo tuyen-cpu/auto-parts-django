@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+﻿﻿{% extends "base.html" %}
 {% load product_extras %}
 {% load static %}
 {% block title %}{{ product.name }} - {{ site_setting.site_name|default:"AutoParts" }}{% endblock %}
@@ -17,12 +17,37 @@
 {% endblock %}
 {% block content %}
 <section class="container detail-layout">
-    <div class="detail-image">
-        {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
-        {% else %}
-            <img src="{% static 'images/product.png' %}" alt="{{ product.name }}">
-        {% endif %}
+    <div class="product-gallery{% if product.image and not gallery_images %} has-single-image{% elif not product.image and gallery_images|length <= 1 %} has-single-image{% endif %}" data-product-gallery>
+        <div class="detail-image product-gallery-main">
+            {% if product.image %}
+                <img data-gallery-main src="{{ product.image.url }}" alt="{{ product.name }}">
+            {% elif gallery_images %}
+                {% with first_image=gallery_images.0 %}
+                    <img data-gallery-main src="{{ first_image.image.url }}" alt="{{ first_image.alt_text|default:product.name }}">
+                {% endwith %}
+            {% else %}
+                <img data-gallery-main src="{% static 'images/product.png' %}" alt="{{ product.name }}">
+            {% endif %}
+            <button class="gallery-nav gallery-prev" type="button" data-gallery-prev aria-label="Ảnh trước">‹</button>
+            <button class="gallery-nav gallery-next" type="button" data-gallery-next aria-label="Ảnh sau">›</button>
+        </div>
+        <div class="product-gallery-thumbs" data-gallery-thumbs>
+            {% if product.image %}
+                <button class="gallery-thumb is-active" type="button" data-gallery-src="{{ product.image.url }}" data-gallery-alt="{{ product.name }}">
+                    <img src="{{ product.image.url }}" alt="{{ product.name }}">
+                </button>
+            {% endif %}
+            {% for item in gallery_images %}
+                <button class="gallery-thumb{% if not product.image and forloop.first %} is-active{% endif %}" type="button" data-gallery-src="{{ item.image.url }}" data-gallery-alt="{{ item.alt_text|default:product.name }}">
+                    <img src="{{ item.image.url }}" alt="{{ item.alt_text|default:product.name }}">
+                </button>
+            {% endfor %}
+            {% if not product.image and not gallery_images %}
+                <button class="gallery-thumb is-active" type="button" data-gallery-src="{% static 'images/product.png' %}" data-gallery-alt="{{ product.name }}">
+                    <img src="{% static 'images/product.png' %}" alt="{{ product.name }}">
+                </button>
+            {% endif %}
+        </div>
     </div>
     <div class="detail-info">
         <p class="sku">SKU: {{ product.sku }}</p>
@@ -37,7 +62,11 @@
             {% elif product.price %}
                 <strong>{{ product.price|vnd }}</strong>
             {% else %}
-                <strong>Giá: Liên hệ</strong>
+                {% if site_setting.hotline %}
+                    <strong>Liên hệ: {{ site_setting.hotline }}</strong>
+                {% else %}
+                    <strong>Liên hệ</strong>
+                {% endif %}
             {% endif %}
         </div>
         <p>{{ product.short_description }}</p>
@@ -49,7 +78,9 @@
 </section>
 <section class="container section-block product-description">
     <h2>Mô tả sản phẩm</h2>
-    <p>{{ product.description|linebreaksbr }}</p>
+    <div class="product-description-content">
+        {{ product.description|safe }}
+    </div>
 </section>
 {% if related_products %}
 <section class="container section-block">
@@ -61,4 +92,70 @@
     </div>
 </section>
 {% endif %}
+<script>
+document.querySelectorAll('[data-product-gallery]').forEach(function (gallery) {
+    var mainImage = gallery.querySelector('[data-gallery-main]');
+    var thumbs = Array.prototype.slice.call(gallery.querySelectorAll('[data-gallery-src]'));
+    var currentIndex = Math.max(0, thumbs.findIndex(function (thumb) {
+        return thumb.classList.contains('is-active');
+    }));
+
+    function showImage(index) {
+        if (!thumbs.length || !mainImage) {
+            return;
+        }
+        currentIndex = (index + thumbs.length) % thumbs.length;
+        thumbs.forEach(function (thumb, thumbIndex) {
+            thumb.classList.toggle('is-active', thumbIndex === currentIndex);
+        });
+        var nextSrc = thumbs[currentIndex].dataset.gallerySrc;
+        var nextAlt = thumbs[currentIndex].dataset.galleryAlt || '';
+        var preloadedImage = new Image();
+
+        mainImage.classList.add('is-switching');
+        preloadedImage.onload = function () {
+            mainImage.src = nextSrc;
+            mainImage.alt = nextAlt;
+            window.requestAnimationFrame(function () {
+                mainImage.classList.remove('is-switching');
+            });
+        };
+        preloadedImage.onerror = function () {
+            mainImage.classList.remove('is-switching');
+        };
+        preloadedImage.src = nextSrc;
+    }
+
+    thumbs.forEach(function (thumb, index) {
+        thumb.addEventListener('click', function () {
+            showImage(index);
+        });
+    });
+
+    var prevButton = gallery.querySelector('[data-gallery-prev]');
+    var nextButton = gallery.querySelector('[data-gallery-next]');
+
+    if (thumbs.length <= 1) {
+        gallery.classList.add('has-single-image');
+        if (prevButton) {
+            prevButton.hidden = true;
+        }
+        if (nextButton) {
+            nextButton.hidden = true;
+        }
+    }
+
+    if (prevButton) {
+        prevButton.addEventListener('click', function () {
+            showImage(currentIndex - 1);
+        });
+    }
+
+    if (nextButton) {
+        nextButton.addEventListener('click', function () {
+            showImage(currentIndex + 1);
+        });
+    }
+});
+</script>
 {% endblock %}

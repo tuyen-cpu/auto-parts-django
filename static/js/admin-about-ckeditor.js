@@ -16,7 +16,9 @@
   }
 
   function getUploadUrl() {
-    return window.location.pathname.replace(/(?:add\/|[^/]+\/change\/)$/, 'ckeditor-upload/');
+    var uploadPath = window.location.pathname.replace(/(?:add\/|[^/]+\/change\/)$/, 'ckeditor-upload/');
+
+    return window.location.origin + uploadPath;
   }
 
   function escapeHtml(value) {
@@ -65,6 +67,75 @@
     document.body.appendChild(modal);
   }
 
+  function injectDialogFixStyles() {
+    if (document.getElementById('ckeditor-dialog-fix-styles')) {
+      return;
+    }
+
+    var style = document.createElement('style');
+
+    style.id = 'ckeditor-dialog-fix-styles';
+    style.textContent = [
+      '.cke_dialog,',
+      '.cke_dialog *,',
+      '.cke_dialog_body,',
+      '.cke_dialog_contents,',
+      '.cke_dialog_page_contents,',
+      '.cke_dialog_ui_vbox,',
+      '.cke_dialog_ui_hbox,',
+      '.cke_dialog_ui_labeled_content {',
+      '  background-color: #fffdf9 !important;',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog_title,',
+      '.cke_dialog_tabs,',
+      '.cke_dialog_footer {',
+      '  background-color: #f7f3ee !important;',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog_tab,',
+      '.cke_dialog_tab span {',
+      '  background-color: #fffdf9 !important;',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog_tab_selected,',
+      '.cke_dialog_tab_selected span {',
+      '  background-color: #fffdf9 !important;',
+      '  color: #c2410c !important;',
+      '}',
+      '.cke_dialog label,',
+      '.cke_dialog .cke_dialog_ui_labeled_label,',
+      '.cke_dialog .cke_dialog_ui_radio,',
+      '.cke_dialog .cke_dialog_ui_checkbox {',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog input,',
+      '.cke_dialog textarea,',
+      '.cke_dialog select {',
+      '  background-color: #ffffff !important;',
+      '  color: #172033 !important;',
+      '  border-color: #d8dee8 !important;',
+      '}',
+      '.cke_dialog input[type="radio"],',
+      '.cke_dialog input[type="checkbox"] {',
+      '  background-color: transparent !important;',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog .cke_dialog_ui_button,',
+      '.cke_dialog .cke_dialog_ui_button span {',
+      '  background-color: #fffdf9 !important;',
+      '  color: #172033 !important;',
+      '}',
+      '.cke_dialog .cke_dialog_ui_button_ok,',
+      '.cke_dialog .cke_dialog_ui_button_ok span {',
+      '  background-color: #008a3d !important;',
+      '  color: #ffffff !important;',
+      '}'
+    ].join('\n');
+
+    document.head.appendChild(style);
+  }
+
   function addPreviewButton(editor) {
     var tools = document.createElement('div');
     var previewButton = document.createElement('button');
@@ -82,16 +153,19 @@
     editor.container.$.parentNode.insertBefore(tools, editor.container.$.nextSibling);
   }
 
-  function initAboutEditor() {
-    var textarea = document.querySelector('#id_content');
+  function initRichTextEditor() {
+    var textarea = document.querySelector('#id_content, #id_description');
 
     if (!textarea || !window.CKEDITOR || textarea.dataset.ckeditorReady) {
       return;
     }
 
+    injectDialogFixStyles();
     textarea.dataset.ckeditorReady = 'true';
 
-    window.CKEDITOR.replace('id_content', {
+    var uploadUrl = getUploadUrl();
+
+    window.CKEDITOR.replace(textarea.id, {
       height: 520,
       allowedContent: true,
       extraAllowedContent: '*[id,class,style]; img[!src,alt,width,height,style,class]; table tr th td[style,class,rowspan,colspan,width,height];',
@@ -99,9 +173,10 @@
       bodyClass: 'about-editor-document',
       removePlugins: 'easyimage,cloudservices',
       extraPlugins: 'uploadimage,image2,justify,colorbutton,font,pastefromword',
-      uploadUrl: getUploadUrl(),
-      imageUploadUrl: getUploadUrl(),
-      filebrowserImageUploadUrl: getUploadUrl(),
+      uploadUrl: uploadUrl,
+      imageUploadUrl: uploadUrl,
+      filebrowserUploadUrl: uploadUrl,
+      filebrowserImageUploadUrl: uploadUrl,
       filebrowserUploadMethod: 'xhr',
       pasteFromWordRemoveFontStyles: false,
       pasteFromWordRemoveStyles: false,
@@ -131,8 +206,8 @@
   }
 
   if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initAboutEditor);
+    document.addEventListener('DOMContentLoaded', initRichTextEditor);
   } else {
-    initAboutEditor();
+    initRichTextEditor();
   }
 })();

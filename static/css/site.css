@@ -197,7 +197,7 @@ body {
     inset: 0;
     z-index: 1;
     pointer-events: none;
-    background: linear-gradient(90deg, var(--white) 0%, rgba(255, 253, 249, .88) 48%, rgba(255, 253, 249, .18) 100%);
+    background: linear-gradient(90deg, var(--white) 0%, rgb(255, 253, 249, 48%) 48%, rgb(255, 255, 255 , 0%) 100%)
 }
 
 .home-hero-image {
@@ -1475,6 +1475,74 @@ del {
     overflow: hidden;
 }
 
+.product-gallery {
+    display: grid;
+    gap: 12px;
+}
+
+.product-gallery-main {
+    position: relative;
+}
+
+.gallery-nav {
+    position: absolute;
+    top: 50%;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid rgba(23, 32, 51, .12);
+    border-radius: 50%;
+    color: var(--ink);
+    background: rgba(255, 253, 249, .9);
+    cursor: pointer;
+    font-size: 34px;
+    line-height: 1;
+    transform: translateY(-50%);
+    transition: background .18s ease, border-color .18s ease;
+}
+
+.gallery-nav:hover {
+    border-color: rgba(194, 65, 12, .42);
+    background: var(--white);
+}
+
+.gallery-prev {
+    left: 12px;
+}
+
+.gallery-next {
+    right: 12px;
+}
+
+.product-gallery-thumbs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(72px, 1fr));
+    gap: 8px;
+}
+
+.gallery-thumb {
+    display: grid;
+    aspect-ratio: 1;
+    place-items: center;
+    overflow: hidden;
+    padding: 0;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    background: var(--surface);
+    cursor: pointer;
+}
+
+.gallery-thumb.is-active {
+    border-color: var(--brand);
+}
+
+.gallery-thumb img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
 .detail-info {
     padding: 24px 0;
 }
@@ -1709,6 +1777,13 @@ del {
     -webkit-mask-image: url("../images/facebook_icon.png");
 }
 
+.floating-contact-button.tiktok .floating-contact-icon {
+    width: 33px;
+    height: 33px;
+    mask-image: url("../images/tiktok.png");
+    -webkit-mask-image: url("../images/tiktok.png");
+}
+
 .floating-contact-button.phone .floating-contact-icon {
     width: 31px;
     height: 31px;
@@ -1722,6 +1797,10 @@ del {
 
 .floating-contact-button:nth-child(3) {
     animation-delay: .4s;
+}
+
+.floating-contact-button:nth-child(4) {
+    animation-delay: .6s;
 }
 
 @keyframes contact-shake {
@@ -2134,6 +2213,134 @@ del {
     .cta-row {
         flex-direction: column;
     }
+}
+
+/* Stable product detail gallery */
+.product-gallery-main.detail-image {
+    aspect-ratio: 4 / 3;
+    min-height: 0 !important;
+    background: var(--surface);
+}
+
+.product-gallery-main.detail-image img[data-gallery-main] {
+    width: 100%;
+    height: 100%;
+    object-fit: cover !important;
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity .18s ease, transform .18s ease;
+}
+
+.product-gallery-main.detail-image img[data-gallery-main].is-switching {
+    opacity: .22;
+    transform: scale(.985);
+}
+
+.product-gallery.has-single-image .gallery-nav,
+.gallery-nav[hidden] {
+    display: none !important;
+}
+
+/* Keep product cards visually consistent across grids. */
+.product-grid {
+    align-items: stretch;
+}
+
+.product-grid > .product-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.product-grid .product-image {
+    flex: 0 0 auto;
+    aspect-ratio: 1 / 1;
+}
+
+.product-grid .product-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.product-grid .product-info {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+}
+
+.product-grid .product-info h3 {
+    min-height: 48px;
+}
+
+.product-grid .product-summary {
+    min-height: 42px;
+}
+
+.product-grid .price-row {
+    margin-top: auto;
+}
+
+/* Dropdown hover must stay readable over the orange background. */
+.site-header .nav-dropdown-menu > a:hover,
+.site-header .nav-dropdown-menu > a:focus,
+.site-header .dropdown-category:hover > .dropdown-parent,
+.site-header .dropdown-category:focus-within > .dropdown-parent,
+.site-header .dropdown-submenu a:hover,
+.site-header .dropdown-submenu a:focus {
+    background: var(--brand) !important;
+    color: var(--white) !important;
+}
+
+/* Rich text content from CKEditor on product detail pages. */
+.product-description-content {
+    color: var(--ink);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.product-description-content p,
+.product-description-content ul,
+.product-description-content ol,
+.product-description-content table,
+.product-description-content figure {
+    margin: 0 0 18px;
+}
+
+.product-description-content img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+}
+
+.product-description-content .image-align-left {
+    float: left;
+    margin: 6px 24px 18px 0;
+}
+
+.product-description-content .image-align-right {
+    float: right;
+    margin: 6px 0 18px 24px;
+}
+
+.product-description-content .image-align-center {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.product-description-content table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+}
+
+.product-description-content th,
+.product-description-content td {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+    color: var(--ink);
 }
 
 /* Final cascade layer for the Lovable-inspired styling */
@@ -2853,5 +3060,34 @@ del {
         width: 38px;
         height: 38px;
         flex-basis: 38px;
+    }
+}
+
+/* Make the company name more prominent in the header brand. */
+.brand-copy strong,
+.site-header.is-sticky .brand-copy strong {
+    font-size: 15px;
+    line-height: 1.55;
+}
+
+@media (max-width: 1240px) {
+    .brand-copy strong,
+    .site-header.is-sticky .brand-copy strong {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 900px) {
+    .brand-copy strong,
+    .site-header.is-sticky .brand-copy strong {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 560px) {
+    .brand-copy strong,
+    .site-header.is-sticky .brand-copy strong {
+        font-size: 12px;
+        line-height: 1.22;
     }
 }

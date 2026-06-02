@@ -10,6 +10,7 @@ class SiteSetting(models.Model):
     address = models.CharField('địa chỉ', max_length=255, blank=True)
     facebook_url = models.URLField('Facebook', blank=True)
     zalo_url = models.URLField('Zalo', blank=True)
+    tiktok_url = models.URLField('TikTok', blank=True)
     google_map_iframe = models.TextField('Google Maps iframe', blank=True)
 
     class Meta:

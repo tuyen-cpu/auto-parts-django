@@ -126,6 +126,11 @@
                 <span class="floating-contact-icon" aria-hidden="true"></span>
             </a>
         {% endif %}
+        {% if site_setting.tiktok_url %}
+            <a class="floating-contact-button tiktok" href="{{ site_setting.tiktok_url }}" target="_blank" rel="noopener" aria-label="TikTok">
+                <span class="floating-contact-icon" aria-hidden="true"></span>
+            </a>
+        {% endif %}
         {% if site_setting.hotline %}
             <a class="floating-contact-button phone" href="tel:{{ site_setting.hotline }}" aria-label="Gọi hotline">
                 <span class="floating-contact-icon" aria-hidden="true"></span>

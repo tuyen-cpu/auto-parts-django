@@ -20,6 +20,7 @@ class Command(BaseCommand):
                 'address': '123 Nguyá»…n VÄƒn Linh, Quáº­n 7, TP.HCM',
                 'facebook_url': 'https://facebook.com/',
                 'zalo_url': 'https://zalo.me/0901234567',
+                'tiktok_url': 'https://www.tiktok.com/',
             },
         )
         Banner.objects.update_or_create(
