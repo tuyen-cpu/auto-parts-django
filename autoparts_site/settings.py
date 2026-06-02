@@ -18,7 +18,7 @@ from urllib.parse import parse_qsl, urlparse
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-def load_env_file(path):
+def load_env_file(path, *, override=False):
     if not path.exists():
         return
 
@@ -27,11 +27,16 @@ def load_env_file(path):
         if not line or line.startswith('#') or '=' not in line:
             continue
         key, value = line.split('=', 1)
-        os.environ.setdefault(key.strip(), value.strip().strip('"').strip("'"))
+        key = key.strip()
+        value = value.strip().strip('"').strip("'")
+        if override:
+            os.environ[key] = value
+        else:
+            os.environ.setdefault(key, value)
 
 
 load_env_file(BASE_DIR / '.env')
-load_env_file(BASE_DIR / os.environ.get('ENV_FILE', '.env.local'))
+load_env_file(BASE_DIR / os.environ.get('ENV_FILE', '.env.local'), override=True)
 
 
 def env_bool(name, default=False):

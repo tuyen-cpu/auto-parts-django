@@ -1,4 +1,4 @@
-from decimal import Decimal
+﻿from decimal import Decimal
 
 from django.core.management.base import BaseCommand
 from contacts.models import ContactMessage
@@ -14,19 +14,19 @@ class Command(BaseCommand):
         SiteSetting.objects.update_or_create(
             id=1,
             defaults={
-                'site_name': 'AutoParts Việt',
+                'site_name': 'AutoParts Viá»‡t',
                 'hotline': '0901 234 567',
                 'email': 'sales@autoparts.test',
-                'address': '123 Nguyễn Văn Linh, Quận 7, TP.HCM',
+                'address': '123 Nguyá»…n VÄƒn Linh, Quáº­n 7, TP.HCM',
                 'facebook_url': 'https://facebook.com/',
                 'zalo_url': 'https://zalo.me/0901234567',
             },
         )
         Banner.objects.update_or_create(
-            title='Phụ tùng ô tô chính hãng',
+            title='Phá»¥ tÃ¹ng Ã´ tÃ´ chÃ­nh hÃ£ng',
             defaults={
-                'subtitle': 'Lọc dầu, phanh, đèn, ắc quy và linh kiện bảo dưỡng cho gara và chủ xe.',
-                'button_text': 'Xem sản phẩm',
+                'subtitle': 'Lá»c dáº§u, phanh, Ä‘Ã¨n, áº¯c quy vÃ  linh kiá»‡n báº£o dÆ°á»¡ng cho gara vÃ  chá»§ xe.',
+                'button_text': 'Xem sáº£n pháº©m',
                 'button_url': '/san-pham/',
                 'is_active': True,
                 'sort_order': 1,
@@ -35,16 +35,16 @@ class Command(BaseCommand):
         about, _ = AboutPage.objects.update_or_create(
             id=1,
             defaults={
-                'title': 'Đối tác phụ tùng đáng tin cậy',
-                'content': 'Chúng tôi cung cấp phụ tùng ô tô chọn lọc cho gara, đại lý và khách hàng cá nhân. Danh mục sản phẩm rõ ràng, giá minh bạch và đội ngũ tư vấn sẵn sàng hỗ trợ chọn đúng mã phụ tùng.',
+                'title': 'Giới thiệu',
+                'content': 'ChÃºng tÃ´i cung cáº¥p phá»¥ tÃ¹ng Ã´ tÃ´ chá»n lá»c cho gara, Ä‘áº¡i lÃ½ vÃ  khÃ¡ch hÃ ng cÃ¡ nhÃ¢n. Danh má»¥c sáº£n pháº©m rÃµ rÃ ng, giÃ¡ minh báº¡ch vÃ  Ä‘á»™i ngÅ© tÆ° váº¥n sáºµn sÃ ng há»— trá»£ chá»n Ä‘Ãºng mÃ£ phá»¥ tÃ¹ng.',
             },
         )
 
         category_tree = {
-            ('Động cơ', 'dong-co'): [('Lọc dầu', 'loc-dau'), ('Bugi', 'bugi'), ('Dây curoa', 'day-curoa')],
-            ('Hệ thống phanh', 'he-thong-phanh'): [('Bố thắng', 'bo-thang'), ('Đĩa phanh', 'dia-phanh'), ('Dầu phanh', 'dau-phanh')],
-            ('Điện - đèn', 'dien-den'): [('Ắc quy', 'ac-quy'), ('Đèn pha', 'den-pha'), ('Cảm biến', 'cam-bien')],
-            ('Chăm sóc xe', 'cham-soc-xe'): [('Dung dịch vệ sinh', 'dung-dich-ve-sinh'), ('Gạt mưa', 'gat-mua'), ('Phụ kiện', 'phu-kien')],
+            ('Äá»™ng cÆ¡', 'dong-co'): [('Lá»c dáº§u', 'loc-dau'), ('Bugi', 'bugi'), ('DÃ¢y curoa', 'day-curoa')],
+            ('Há»‡ thá»‘ng phanh', 'he-thong-phanh'): [('Bá»‘ tháº¯ng', 'bo-thang'), ('ÄÄ©a phanh', 'dia-phanh'), ('Dáº§u phanh', 'dau-phanh')],
+            ('Äiá»‡n - Ä‘Ã¨n', 'dien-den'): [('áº®c quy', 'ac-quy'), ('ÄÃ¨n pha', 'den-pha'), ('Cáº£m biáº¿n', 'cam-bien')],
+            ('ChÄƒm sÃ³c xe', 'cham-soc-xe'): [('Dung dá»‹ch vá»‡ sinh', 'dung-dich-ve-sinh'), ('Gáº¡t mÆ°a', 'gat-mua'), ('Phá»¥ kiá»‡n', 'phu-kien')],
         }
         categories = {}
         for (parent_name, parent_slug), child_items in category_tree.items():
@@ -61,18 +61,18 @@ class Command(BaseCommand):
                 categories[child_name] = child
 
         products = [
-            ('Lọc dầu động cơ Bosch', 'AP-LOCD-001', 'Lọc dầu', 180000, 150000, True, 4.8),
+            ('Lá»c dáº§u Ä‘á»™ng cÆ¡ Bosch', 'AP-LOCD-001', 'Lá»c dáº§u', 180000, 150000, True, 4.8),
             ('Bugi Iridium NGK', 'AP-BUGI-002', 'Bugi', 260000, None, True, 4.7),
-            ('Dây curoa tổng hợp Mitsuboshi', 'AP-DAY-003', 'Dây curoa', 420000, 390000, False, 4.6),
-            ('Bộ má phanh trước Bendix', 'AP-PHANH-004', 'Bố thắng', 850000, 790000, True, 4.9),
-            ('Đĩa phanh trước OEM', 'AP-DIA-005', 'Đĩa phanh', 1250000, None, False, 4.5),
-            ('Ắc quy khô 12V 60Ah', 'AP-AQ-006', 'Ắc quy', 1650000, 1520000, True, 4.8),
-            ('Bóng đèn pha LED H4', 'AP-DEN-007', 'Đèn pha', 520000, 480000, False, 4.4),
-            ('Cảm biến áp suất lốp', 'AP-CB-008', 'Cảm biến', 980000, None, False, 4.3),
-            ('Gạt mưa silicon 24 inch', 'AP-GM-009', 'Gạt mưa', 220000, 190000, True, 4.7),
-            ('Dung dịch vệ sinh kim phun', 'AP-DD-010', 'Dung dịch vệ sinh', 160000, None, False, 4.2),
-            ('Dầu phanh DOT4', 'AP-DP-011', 'Dầu phanh', 145000, 120000, False, 4.5),
-            ('Bộ phụ kiện cứu hộ mini', 'AP-PK-012', 'Phụ kiện', 350000, None, True, 4.6),
+            ('DÃ¢y curoa tá»•ng há»£p Mitsuboshi', 'AP-DAY-003', 'DÃ¢y curoa', 420000, 390000, False, 4.6),
+            ('Bá»™ mÃ¡ phanh trÆ°á»›c Bendix', 'AP-PHANH-004', 'Bá»‘ tháº¯ng', 850000, 790000, True, 4.9),
+            ('ÄÄ©a phanh trÆ°á»›c OEM', 'AP-DIA-005', 'ÄÄ©a phanh', 1250000, None, False, 4.5),
+            ('áº®c quy khÃ´ 12V 60Ah', 'AP-AQ-006', 'áº®c quy', 1650000, 1520000, True, 4.8),
+            ('BÃ³ng Ä‘Ã¨n pha LED H4', 'AP-DEN-007', 'ÄÃ¨n pha', 520000, 480000, False, 4.4),
+            ('Cáº£m biáº¿n Ã¡p suáº¥t lá»‘p', 'AP-CB-008', 'Cáº£m biáº¿n', 980000, None, False, 4.3),
+            ('Gáº¡t mÆ°a silicon 24 inch', 'AP-GM-009', 'Gáº¡t mÆ°a', 220000, 190000, True, 4.7),
+            ('Dung dá»‹ch vá»‡ sinh kim phun', 'AP-DD-010', 'Dung dá»‹ch vá»‡ sinh', 160000, None, False, 4.2),
+            ('Dáº§u phanh DOT4', 'AP-DP-011', 'Dáº§u phanh', 145000, 120000, False, 4.5),
+            ('Bá»™ phá»¥ kiá»‡n cá»©u há»™ mini', 'AP-PK-012', 'Phá»¥ kiá»‡n', 350000, None, True, 4.6),
         ]
         for name, sku, category_name, price, sale_price, featured, rating in products:
             Product.objects.update_or_create(
@@ -84,8 +84,8 @@ class Command(BaseCommand):
                     'price': Decimal(price),
                     'sale_price': Decimal(sale_price) if sale_price else None,
                     'rating': Decimal(str(rating)),
-                    'short_description': 'Sản phẩm phụ tùng ô tô phổ biến, phù hợp nhiều dòng xe.',
-                    'description': 'Thông tin chi tiết sản phẩm, thông số kỹ thuật và tư vấn lắp đặt có thể cập nhật trong Django Admin.',
+                    'short_description': 'Sáº£n pháº©m phá»¥ tÃ¹ng Ã´ tÃ´ phá»• biáº¿n, phÃ¹ há»£p nhiá»u dÃ²ng xe.',
+                    'description': 'ThÃ´ng tin chi tiáº¿t sáº£n pháº©m, thÃ´ng sá»‘ ká»¹ thuáº­t vÃ  tÆ° váº¥n láº¯p Ä‘áº·t cÃ³ thá»ƒ cáº­p nháº­t trong Django Admin.',
                     'is_featured': featured,
                     'is_active': True,
                 },
@@ -94,9 +94,9 @@ class Command(BaseCommand):
         ContactMessage.objects.get_or_create(
             phone='0912345678',
             defaults={
-                'full_name': 'Khách hàng demo',
+                'full_name': 'KhÃ¡ch hÃ ng demo',
                 'email': 'demo@example.com',
-                'message': 'Tôi cần tư vấn lọc dầu cho xe gia đình.',
+                'message': 'TÃ´i cáº§n tÆ° váº¥n lá»c dáº§u cho xe gia Ä‘Ã¬nh.',
             },
         )
         self.stdout.write(self.style.SUCCESS('Demo data is ready.'))

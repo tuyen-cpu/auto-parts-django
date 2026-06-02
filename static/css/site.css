@@ -1515,7 +1515,6 @@ del {
     align-items: start;
 }
 
-.rich-text,
 .contact-info,
 .contact-form {
     color: var(--muted);
@@ -2553,6 +2552,151 @@ del {
     padding-left: 24px;
 }
 
+.about-editor-page {
+    padding: 18px 0 64px;
+}
+
+.about-editor-shell {
+    display: grid;
+    gap: 26px;
+}
+
+.about-editor-heading {
+    max-width: 920px;
+    padding: 28px 0 6px;
+    border-bottom: 1px solid var(--line);
+}
+
+.about-editor-heading span {
+    display: inline-flex;
+    margin-bottom: 12px;
+    color: var(--brand);
+    font-size: 13px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: .08em;
+}
+
+.about-editor-heading h1 {
+    margin: 0;
+    color: var(--ink);
+    font-size: clamp(34px, 5vw, 58px);
+    line-height: 1.08;
+}
+
+.about-editor-content {
+    /*width: min(100%, 980px);*/
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.about-editor-content > :first-child {
+    margin-top: 0;
+}
+
+.about-editor-content > :last-child {
+    margin-bottom: 0;
+}
+
+.about-editor-content h2,
+.about-editor-content h3,
+.about-editor-content h4 {
+    color: var(--ink);
+    line-height: 1.18;
+}
+
+.about-editor-content p,
+.about-editor-content li {
+    color: var(--ink);
+    font-size: 17px;
+}
+
+.about-editor-content.rich-text,
+.about-editor-content.rich-text p,
+.about-editor-content.rich-text li,
+.about-editor-content.rich-text td,
+.about-editor-content.rich-text th {
+    color: var(--ink);
+}
+
+.about-editor-page .rich-text {
+    color: var(--ink);
+}
+
+.rich-text figure {
+    margin: 24px 0;
+}
+
+.rich-text img {
+    height: auto;
+    max-width: 100%;
+    border-radius: 8px;
+}
+
+.rich-text .image-align-left {
+    float: left;
+    margin: 6px 24px 18px 0;
+}
+
+.rich-text .image-align-right {
+    float: right;
+    margin: 6px 0 18px 24px;
+}
+
+.rich-text .image-align-center {
+    display: block;
+    margin-right: auto;
+    margin-left: auto;
+    text-align: center;
+}
+
+.rich-text .image-align-center img,
+.rich-text p[style*="text-align: center"] img,
+.rich-text div[style*="text-align: center"] img {
+    display: inline-block;
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.rich-text figure.image_resized img {
+    width: 100%;
+}
+
+.rich-text figcaption {
+    margin-top: 8px;
+    color: var(--muted);
+    font-size: 14px;
+    text-align: center;
+}
+
+.rich-text .image-style-side {
+    float: right;
+    width: 42%;
+    max-width: 45%;
+    margin: 6px 0 18px 24px;
+}
+
+.rich-text figure.image-style-side,
+.rich-text figure.image-style-align-right {
+    float: right;
+    width: 42%;
+    max-width: 420px;
+    margin: 6px 0 18px 24px;
+}
+
+.rich-text table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.rich-text th,
+.rich-text td {
+    padding: 10px 12px;
+    border: 1px solid var(--line);
+}
+
 .contact-layout {
     margin-top: 12px;
 }
@@ -2565,6 +2709,40 @@ del {
     .content-page {
         padding-right: 16px;
         padding-left: 16px;
+    }
+
+    .about-editor-page {
+        padding-bottom: 42px;
+    }
+
+    .about-editor-heading {
+        padding-top: 18px;
+    }
+
+    .about-editor-content {
+        padding: 22px 18px;
+    }
+
+    .rich-text .image-style-side {
+        float: none;
+        width: auto;
+        max-width: 100%;
+        margin: 24px 0;
+    }
+
+    .rich-text figure.image-style-side,
+    .rich-text figure.image-style-align-right {
+        float: none;
+        width: auto;
+        max-width: 100%;
+        margin: 24px 0;
+    }
+
+    .rich-text .image-align-left,
+    .rich-text .image-align-right {
+        float: none;
+        display: block;
+        margin: 24px 0;
     }
 
     .contact-info {
