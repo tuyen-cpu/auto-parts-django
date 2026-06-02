@@ -69,7 +69,11 @@
         {% for category in parent_categories %}
             <a class="category-tile" href="{{ category.get_absolute_url }}">
                 <span>{{ category.name }}</span>
-                <small>{{ category.children.count }} nhóm sản phẩm</small>
+                {% if category.child_count %}
+                    <small>{{ category.child_count }} nhóm sản phẩm</small>
+                {% else %}
+                    <small>{{ category.direct_product_count }} sản phẩm</small>
+                {% endif %}
             </a>
         {% endfor %}
     </div>
