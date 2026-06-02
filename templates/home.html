@@ -35,46 +35,28 @@
     </div>
 </section>
 
-<section class="container service-grid">
-    <article>
-        <span>✓</span>
-        <h3>100% Chính hãng</h3>
-        <p>Cam kết nguồn gốc rõ ràng, bảo hành minh bạch cho từng sản phẩm.</p>
-    </article>
-    <article>
-        <span>↗</span>
-        <h3>Giao toàn quốc</h3>
-        <p>Giao nhanh tại TP.HCM và hỗ trợ vận chuyển đến các tỉnh thành.</p>
-    </article>
-    <article>
-        <span>⚙</span>
-        <h3>Hỗ trợ lắp đặt</h3>
-        <p>Tư vấn chọn đúng mã phụ tùng theo xe và nhu cầu sử dụng.</p>
-    </article>
-    <article>
-        <span>★</span>
-        <h3>Bảo hành dài</h3>
-        <p>Chính sách bảo hành rõ ràng, đồng hành sau khi mua hàng.</p>
-    </article>
-</section>
-
-<section class="container section-block">
-    <div class="section-heading">
-        <div>
-            <p>Sản phẩm nổi bật</p>
-            <h2>Phụ tùng bán chạy</h2>
-        </div>
-        <a href="{% url 'products:list' %}">Xem tất cả →</a>
-    </div>
-    <div class="product-grid">
-        {% for product in featured_products %}
-            {% include "includes/product_card.html" %}
-        {% empty %}
-            <p>Chưa có sản phẩm nổi bật.</p>
-        {% endfor %}
-    </div>
-</section>
-
+{#<section class="container service-grid">#}
+{#    <article>#}
+{#        <span>✓</span>#}
+{#        <h3>100% Chính hãng</h3>#}
+{#        <p>Cam kết nguồn gốc rõ ràng, bảo hành minh bạch cho từng sản phẩm.</p>#}
+{#    </article>#}
+{#    <article>#}
+{#        <span>↗</span>#}
+{#        <h3>Giao toàn quốc</h3>#}
+{#        <p>Giao nhanh tại TP.HCM và hỗ trợ vận chuyển đến các tỉnh thành.</p>#}
+{#    </article>#}
+{#    <article>#}
+{#        <span>⚙</span>#}
+{#        <h3>Hỗ trợ lắp đặt</h3>#}
+{#        <p>Tư vấn chọn đúng mã phụ tùng theo xe và nhu cầu sử dụng.</p>#}
+{#    </article>#}
+{#    <article>#}
+{#        <span>★</span>#}
+{#        <h3>Bảo hành dài</h3>#}
+{#        <p>Chính sách bảo hành rõ ràng, đồng hành sau khi mua hàng.</p>#}
+{#    </article>#}
+{#</section>#}
 <section class="container section-block">
     <div class="section-heading">
         <div>
@@ -92,6 +74,24 @@
         {% endfor %}
     </div>
 </section>
+<section class="container section-block">
+    <div class="section-heading">
+        <div>
+            <p>Sản phẩm nổi bật</p>
+            <h2>Phụ tùng bán chạy</h2>
+        </div>
+        <a href="{% url 'products:list' %}">Xem tất cả →</a>
+    </div>
+    <div class="product-grid">
+        {% for product in featured_products %}
+            {% include "includes/product_card.html" %}
+        {% empty %}
+            <p>Chưa có sản phẩm nổi bật.</p>
+        {% endfor %}
+    </div>
+</section>
+
+
 
 <section class="container section-block">
     <div class="section-heading">
