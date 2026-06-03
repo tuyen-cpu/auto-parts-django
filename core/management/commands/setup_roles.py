@@ -17,4 +17,5 @@ class Command(BaseCommand):
         manager_group.permissions.set(manager_permissions)
 
         self.stdout.write(self.style.SUCCESS('Created/updated Admin and Manager groups.'))
+        self.stdout.write('Manager permissions include product gallery image add/change/delete permissions.')
         self.stdout.write('To create a manager: create a staff user, then add the user to the Manager group.')

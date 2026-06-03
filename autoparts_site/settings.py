@@ -90,7 +90,11 @@ SECRET_KEY = os.environ.get(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env_bool('DEBUG', True)
 
-ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', ['*'])
+ALLOWED_HOSTS = env_list('ALLOWED_HOSTS', [
+    "phutungttqmiennam.com",
+    "www.phutungttqmiennam.com",
+    "auto-parts-django.onrender.com",
+])
 CSRF_TRUSTED_ORIGINS = env_list('CSRF_TRUSTED_ORIGINS')
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 SESSION_COOKIE_SECURE = env_bool('SESSION_COOKIE_SECURE', not DEBUG)
