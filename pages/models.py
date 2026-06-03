@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
-from django.utils.text import slugify
+
+from core.slug_utils import unique_slug
 
 
 class AboutPage(models.Model):
@@ -52,13 +53,7 @@ class PromotionPost(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.slug:
-            base_slug = slugify(self.title) or 'khuyen-mai'
-            slug = base_slug
-            counter = 2
-            while PromotionPost.objects.filter(slug=slug).exclude(pk=self.pk).exists():
-                slug = f'{base_slug}-{counter}'
-                counter += 1
-            self.slug = slug
+            self.slug = unique_slug(self, self.title, max_length=200, fallback='khuyen-mai')
         super().save(*args, **kwargs)
 
     def get_absolute_url(self):

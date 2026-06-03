@@ -83,7 +83,6 @@ class PromotionPostAdmin(admin.ModelAdmin):
     list_display = ('title', 'is_active', 'sort_order', 'created_at', 'updated_at')
     list_filter = ('is_active', 'created_at')
     search_fields = ('title', 'summary', 'content')
-    prepopulated_fields = {'slug': ('title',)}
     list_editable = ('is_active', 'sort_order')
     readonly_fields = ('created_at', 'updated_at')
 

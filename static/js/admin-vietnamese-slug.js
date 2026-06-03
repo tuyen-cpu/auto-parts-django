@@ -1,10 +1,10 @@
-(function () {
+﻿(function () {
     function vietnameseSlug(value) {
         return (value || '')
             .toLowerCase()
             .normalize('NFD')
             .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
+            .replace(/[\u0111\u00f0]/g, 'd')
             .replace(/[^a-z0-9]+/g, '-')
             .replace(/^-+|-+$/g, '')
             .replace(/-{2,}/g, '-');
@@ -17,19 +17,31 @@
             return;
         }
 
+        var userEditedSlug = Boolean(slug.value && slug.value !== vietnameseSlug(source.value));
         var previousGenerated = vietnameseSlug(source.value);
-        slug.dataset.previousGenerated = previousGenerated;
 
-        source.addEventListener('input', function () {
-            var currentGenerated = vietnameseSlug(source.value);
-            var previous = slug.dataset.previousGenerated || '';
-            var canUpdate = !slug.value || slug.value === previous;
-
-            if (canUpdate) {
-                slug.value = currentGenerated;
-            }
-            slug.dataset.previousGenerated = currentGenerated;
+        slug.addEventListener('input', function () {
+            userEditedSlug = document.activeElement === slug;
         });
+
+        function updateSlug() {
+            if (userEditedSlug) {
+                return;
+            }
+            previousGenerated = vietnameseSlug(source.value);
+            slug.value = previousGenerated;
+        }
+
+        ['input', 'change', 'keyup', 'blur'].forEach(function (eventName) {
+            source.addEventListener(eventName, function () {
+                updateSlug();
+                window.setTimeout(updateSlug, 0);
+            });
+        });
+
+        if (!slug.value) {
+            updateSlug();
+        }
     }
 
     document.addEventListener('DOMContentLoaded', function () {
