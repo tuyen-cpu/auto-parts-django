@@ -3,14 +3,14 @@
 {% block breadcrumb %}
 <nav class="breadcrumb-wrap" aria-label="Breadcrumb">
     <div class="container breadcrumb">
-        <a href="{% url 'core:home' %}">Trang chá»§</a>
+        <a href="{% url 'core:home' %}">Trang chủ</a>
         <span>/</span>
         {% if current_category %}
-            <a href="{% url 'products:list' %}">Sáº£n pháº©m</a>
+            <a href="{% url 'products:list' %}">Sản phẩm</a>
             <span>/</span>
             <span>{{ current_category.name }}</span>
         {% else %}
-            <span>Sáº£n pháº©m</span>
+            <span>Sản phẩm</span>
         {% endif %}
     </div>
 </nav>
@@ -18,8 +18,8 @@
 {% block content %}
 <section class="container catalog-layout">
     <aside class="category-sidebar">
-        <h2>Danh má»¥c</h2>
-        <a class="parent-cat{% if not current_category %} active{% endif %}" href="{% url 'products:list' %}">Táº¥t cáº£</a>
+        <h2>Danh mục</h2>
+        <a class="parent-cat{% if not current_category %} active{% endif %}" href="{% url 'products:list' %}">Tất cả</a>
         {% for category in categories %}
             <div class="category-group">
                 <a class="parent-cat{% if current_category == category %} active{% endif %}" href="{{ category.get_absolute_url }}">{{ category.name }}</a>
@@ -52,15 +52,15 @@
             {% for product in products %}
                 {% include "includes/product_card.html" %}
             {% empty %}
-                <p>KhÃ´ng tÃ¬m tháº¥y sáº£n pháº©m phÃ¹ há»£p.</p>
+                <p>Không tìm thấy sản phẩm phù hợp.</p>
             {% endfor %}
         </div>
         {% if is_paginated %}
             <nav class="pagination">
                 {% if page_obj.has_previous %}
-                    <a class="page-arrow" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&sort={{ sort }}" aria-label="Trang trÆ°á»›c">â€¹</a>
+                    <a class="page-arrow" href="?page={{ page_obj.previous_page_number }}&q={{ q }}&sort={{ sort }}" aria-label="Trang trước">‹</a>
                 {% else %}
-                    <span class="page-arrow disabled" aria-hidden="true">â€¹</span>
+                    <span class="page-arrow disabled" aria-hidden="true">‹</span>
                 {% endif %}
                 {% for page_number in page_range %}
                     {% if page_number == page_obj.paginator.ELLIPSIS %}
@@ -72,9 +72,9 @@
                     {% endif %}
                 {% endfor %}
                 {% if page_obj.has_next %}
-                    <a class="page-arrow" href="?page={{ page_obj.next_page_number }}&q={{ q }}&sort={{ sort }}" aria-label="Trang sau">â€º</a>
+                    <a class="page-arrow" href="?page={{ page_obj.next_page_number }}&q={{ q }}&sort={{ sort }}" aria-label="Trang sau">›</a>
                 {% else %}
-                    <span class="page-arrow disabled" aria-hidden="true">â€º</span>
+                    <span class="page-arrow disabled" aria-hidden="true">›</span>
                 {% endif %}
             </nav>
         {% endif %}

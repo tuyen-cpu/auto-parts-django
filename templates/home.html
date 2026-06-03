@@ -6,29 +6,29 @@
     {% if hero_banner.image %}
         <img class="home-hero-image" src="{{ hero_banner.image.url }}" alt="{{ hero_banner.title }}">
     {% else %}
-        <img class="home-hero-image" src="{% static 'images/hero-parts-banner.jpg' %}" alt="{{ hero_banner.title|default:'Phá»¥ tÃ¹ng Ã´ tÃ´' }}">
+        <img class="home-hero-image" src="{% static 'images/hero-parts-banner.jpg' %}" alt="{{ hero_banner.title|default:'Phụ tùng ô tô' }}">
     {% endif %}
     <div class="container home-hero-inner">
         <div class="home-hero-copy">
-            <span class="hero-badge"><span></span>{{ hero_banner.eyebrow|default:"ChÃ­nh hÃ£ng Â· Báº£o hÃ nh 12 thÃ¡ng" }}</span>
-            <h1>{{ hero_banner.title|default:"Phá»¥ tÃ¹ng Ã´ tÃ´ Ä‘áº³ng cáº¥p cho má»i hÃ nh trÃ¬nh." }}</h1>
-            <p>{{ hero_banner.subtitle|default:"HÆ¡n 10.000 mÃ£ phá»¥ tÃ¹ng chÃ­nh hÃ£ng, sáºµn kho cho háº§u háº¿t cÃ¡c dÃ²ng xe phá»• thÃ´ng vÃ  cao cáº¥p. Giao nhanh toÃ n quá»‘c." }}</p>
+            <span class="hero-badge"><span></span>{{ hero_banner.eyebrow|default:"Chính hãng · Bảo hành 12 tháng" }}</span>
+            <h1>{{ hero_banner.title|default:"Phụ tùng ô tô đẳng cấp cho mọi hành trình." }}</h1>
+            <p>{{ hero_banner.subtitle|default:"Hơn 10.000 mã phụ tùng chính hãng, sẵn kho cho hầu hết các dòng xe phổ thông và cao cấp. Giao nhanh toàn quốc." }}</p>
             <div class="hero-actions">
-                <a class="primary-button" href="{{ hero_banner.button_url|default:'/san-pham/' }}">{{ hero_banner.button_text|default:"Xem sáº£n pháº©m" }}</a>
-                <a class="secondary-button" href="{% url 'contacts:contact' %}">TÆ° váº¥n miá»…n phÃ­</a>
+                <a class="primary-button" href="{{ hero_banner.button_url|default:'/san-pham/' }}">{{ hero_banner.button_text|default:"Xem sản phẩm" }}</a>
+                <a class="secondary-button" href="{% url 'contacts:contact' %}">Tư vấn miễn phí</a>
             </div>
             <div class="hero-stats">
                 <div>
                     <strong>10K+</strong>
-                    <span>MÃ£ phá»¥ tÃ¹ng</span>
+                    <span>Mã phụ tùng</span>
                 </div>
                 <div>
                     <strong>15+</strong>
-                    <span>NÄƒm kinh nghiá»‡m</span>
+                    <span>Năm kinh nghiệm</span>
                 </div>
                 <div>
                     <strong>98%</strong>
-                    <span>KhÃ¡ch hÃ i lÃ²ng</span>
+                    <span>Khách hài lòng</span>
                 </div>
             </div>
         </div>
@@ -60,19 +60,19 @@
 <section class="container section-block">
     <div class="section-heading">
         <div>
-            <p>Danh má»¥c</p>
-            <h2>TÃ¬m theo nhÃ³m phá»¥ tÃ¹ng</h2>
+            <p>Danh mục</p>
+            <h2>Tìm theo nhóm phụ tùng</h2>
         </div>
-        <a href="{% url 'products:list' %}">Táº¥t cáº£ sáº£n pháº©m â†’</a>
+        <a href="{% url 'products:list' %}">Tất cả sản phẩm →</a>
     </div>
     <div class="category-grid">
         {% for category in parent_categories %}
             <a class="category-tile" href="{{ category.get_absolute_url }}">
                 <span>{{ category.name }}</span>
                 {% if category.child_count %}
-                    <small>{{ category.child_count }} nhÃ³m sáº£n pháº©m</small>
+                    <small>{{ category.child_count }} nhóm sản phẩm</small>
                 {% else %}
-                    <small>{{ category.direct_product_count }} sáº£n pháº©m</small>
+                    <small>{{ category.direct_product_count }} sản phẩm</small>
                 {% endif %}
             </a>
         {% endfor %}
@@ -100,8 +100,8 @@
 <section class="container section-block">
     <div class="section-heading">
         <div>
-            <p>Sáº£n pháº©m má»›i</p>
-            <h2>Vá»«a cáº­p nháº­t</h2>
+            <p>Sản phẩm mới</p>
+            <h2>Vừa cập nhật</h2>
         </div>
     </div>
     <div class="product-grid">
@@ -113,9 +113,9 @@
 
 <section class="container home-cta">
     <div>
-        <h2>KhÃ´ng tÃ¬m tháº¥y phá»¥ tÃ¹ng báº¡n cáº§n?</h2>
-        <p>Äá»ƒ láº¡i thÃ´ng tin, Ä‘á»™i ngÅ© ká»¹ thuáº­t sáº½ tÆ° váº¥n vÃ  bÃ¡o giÃ¡ trong vÃ²ng 30 phÃºt.</p>
-        <a class="primary-button" href="{% url 'contacts:contact' %}">LiÃªn há»‡ ngay</a>
+        <h2>Không tìm thấy phụ tùng bạn cần?</h2>
+        <p>Để lại thông tin, đội ngũ kỹ thuật sẽ tư vấn và báo giá trong vòng 30 phút.</p>
+        <a class="primary-button" href="{% url 'contacts:contact' %}">Liên hệ ngay</a>
     </div>
 </section>
 {% endblock %}

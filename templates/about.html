@@ -3,9 +3,9 @@
 {% block breadcrumb %}
 <nav class="breadcrumb-wrap" aria-label="Breadcrumb">
     <div class="container breadcrumb">
-        <a href="{% url 'core:home' %}">Trang chá»§</a>
+        <a href="{% url 'core:home' %}">Trang chủ</a>
         <span>/</span>
-        <span>Giá»›i thiá»‡u</span>
+        <span>Giới thiệu</span>
     </div>
 </nav>
 {% endblock %}
@@ -16,7 +16,7 @@
             {% if page.content %}
                 {{ page.content|safe }}
             {% else %}
-                <p>Ná»™i dung giá»›i thiá»‡u cÃ³ thá»ƒ chá»‰nh sá»­a trong Django Admin.</p>
+                <p>Nội dung giới thiệu có thể chỉnh sửa trong Django Admin.</p>
             {% endif %}
         </article>
     </div>

@@ -3,9 +3,9 @@
 {% block breadcrumb %}
 <nav class="breadcrumb-wrap" aria-label="Breadcrumb">
     <div class="container breadcrumb">
-        <a href="{% url 'core:home' %}">Trang chá»§</a>
+        <a href="{% url 'core:home' %}">Trang chủ</a>
         <span>/</span>
-        <span>Khuyáº¿n mÃ£i</span>
+        <span>Khuyến mãi</span>
     </div>
 </nav>
 {% endblock %}
@@ -19,7 +19,7 @@
                     {% if post.image %}
                         <img src="{{ post.image.url }}" alt="{{ post.title }}">
                     {% else %}
-                        <span>Khuyáº¿n mÃ£i</span>
+                        <span>Khuyến mãi</span>
                     {% endif %}
                 </a>
                 <div class="promotion-info">
@@ -29,11 +29,11 @@
                     {% else %}
                         <p>{{ post.content|truncatewords:28 }}</p>
                     {% endif %}
-                    <a class="read-more" href="{{ post.get_absolute_url }}">Xem chi tiáº¿t</a>
+                    <a class="read-more" href="{{ post.get_absolute_url }}">Xem chi tiết</a>
                 </div>
             </article>
         {% empty %}
-            <p>ChÆ°a cÃ³ chÆ°Æ¡ng trÃ¬nh khuyáº¿n mÃ£i.</p>
+            <p>Chưa có chương trình khuyến mãi.</p>
         {% endfor %}
     </div>
 </section>
