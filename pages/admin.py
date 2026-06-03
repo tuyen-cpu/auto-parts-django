@@ -87,4 +87,7 @@ class PromotionPostAdmin(admin.ModelAdmin):
     list_editable = ('is_active', 'sort_order')
     readonly_fields = ('created_at', 'updated_at')
 
+    class Media:
+        js = ('js/admin-vietnamese-slug.js',)
+
 # Register your models here.

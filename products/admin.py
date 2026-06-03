@@ -31,6 +31,9 @@ class CategoryAdmin(admin.ModelAdmin):
         }),
     )
 
+    class Media:
+        js = ('js/admin-vietnamese-slug.js',)
+
 
 class ProductImageInlineFormSet(BaseInlineFormSet):
     def clean(self):
@@ -85,6 +88,7 @@ class ProductAdmin(admin.ModelAdmin):
         }
         js = (
             'https://cdn.ckeditor.com/4.22.1/full-all/ckeditor.js',
+            'js/admin-vietnamese-slug.js',
             'js/admin-about-ckeditor.js',
         )
 
