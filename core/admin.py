@@ -48,10 +48,10 @@ class SiteSettingAdmin(admin.ModelAdmin):
     search_fields = ('site_name', 'slogan', 'hotline', 'email', 'address')
     fieldsets = (
         ('Thông tin chung', {
-            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address'),
+            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address', 'seo_description'),
         }),
         ('Liên kết và bản đồ', {
-            'fields': ('facebook_url', 'zalo_url', 'tiktok_url', 'google_map_iframe'),
+            'fields': ('facebook_url', 'zalo_url', 'tiktok_url', 'google_business_url', 'google_map_iframe'),
         }),
     )
 

@@ -18,10 +18,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import include, path
+from core import views as core_views
 from pages import views as page_views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('robots.txt', core_views.robots_txt, name='robots_txt'),
+    path('sitemap.xml', core_views.sitemap_xml, name='sitemap_xml'),
     path('', include('core.urls')),
     path('san-pham/', include('products.urls')),
     path('khuyen-mai/', page_views.promotion, name='promotion'),

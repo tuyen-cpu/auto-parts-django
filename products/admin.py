@@ -16,9 +16,20 @@ from .models import Category, Product, ProductImage
 class CategoryAdmin(admin.ModelAdmin):
     list_display = ('name', 'parent', 'is_active', 'sort_order')
     list_filter = ('is_active', 'parent')
-    search_fields = ('name', 'slug')
+    search_fields = ('name', 'slug', 'description', 'seo_title', 'seo_description')
     prepopulated_fields = {'slug': ('name',)}
     list_editable = ('is_active', 'sort_order')
+    fieldsets = (
+        ('Thong tin danh muc', {
+            'fields': ('name', 'slug', 'parent', 'image', 'description'),
+        }),
+        ('SEO', {
+            'fields': ('seo_title', 'seo_description'),
+        }),
+        ('Hien thi', {
+            'fields': ('is_active', 'sort_order'),
+        }),
+    )
 
 
 class ProductImageInlineFormSet(BaseInlineFormSet):
@@ -50,6 +61,23 @@ class ProductAdmin(admin.ModelAdmin):
     list_editable = ('is_featured', 'is_active')
     date_hierarchy = 'created_at'
     inlines = (ProductImageInline,)
+    fieldsets = (
+        ('Thong tin san pham', {
+            'fields': ('name', 'slug', 'sku', 'category', 'image', 'price', 'sale_price', 'rating'),
+        }),
+        ('Noi dung', {
+            'fields': ('short_description', 'description'),
+        }),
+        ('SEO', {
+            'fields': ('seo_title', 'seo_description'),
+        }),
+        ('Hien thi', {
+            'fields': ('is_featured', 'is_active'),
+        }),
+        ('Thoi gian', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
 
     class Media:
         css = {

@@ -3134,3 +3134,25 @@ del {
 .product-grid > .product-card .price-row {
     margin-top: auto;
 }
+
+.category-seo-copy {
+    margin-bottom: 24px;
+    padding: 24px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 22px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.96), rgba(243, 247, 251, 0.9));
+    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
+}
+
+.category-seo-copy h1 {
+    margin: 0 0 10px;
+    font-size: clamp(26px, 4vw, 42px);
+    line-height: 1.08;
+}
+
+.category-seo-copy p,
+.category-seo-copy div {
+    margin: 0;
+    color: var(--muted);
+    line-height: 1.75;
+}

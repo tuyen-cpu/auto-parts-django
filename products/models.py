@@ -5,6 +5,9 @@ from django.urls import reverse
 class Category(models.Model):
     name = models.CharField('tên danh mục', max_length=140)
     slug = models.SlugField('slug', max_length=160, unique=True)
+    description = models.TextField('mo ta SEO/danh muc', blank=True)
+    seo_title = models.CharField('SEO title', max_length=180, blank=True)
+    seo_description = models.CharField('SEO description', max_length=255, blank=True)
     parent = models.ForeignKey(
         'self',
         verbose_name='danh mục cha',
@@ -40,6 +43,8 @@ class Product(models.Model):
     rating = models.DecimalField('rating', max_digits=2, decimal_places=1, null=True, blank=True)
     short_description = models.CharField('mô tả ngắn', max_length=255, blank=True)
     description = models.TextField('mô tả', blank=True)
+    seo_title = models.CharField('SEO title', max_length=180, blank=True)
+    seo_description = models.CharField('SEO description', max_length=255, blank=True)
     is_featured = models.BooleanField('sản phẩm nổi bật', default=False)
     is_active = models.BooleanField('hiển thị', default=True)
     created_at = models.DateTimeField('ngày tạo', auto_now_add=True)

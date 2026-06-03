@@ -2,7 +2,10 @@ import unicodedata
 
 from django.db.models import Q
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 from django.views.generic import DetailView, ListView
+
+from core.seo import breadcrumb_schema, clean_text, local_business_schema, product_schema, seo_context
 
 from .models import Category, Product, ProductImage
 
@@ -61,6 +64,41 @@ class ProductListView(ListView):
         context['categories'] = Category.objects.filter(is_active=True, parent__isnull=True).prefetch_related('children')
         context['q'] = self.request.GET.get('q', '')
         context['sort'] = self.request.GET.get('sort', 'newest')
+        site_setting = getattr(self.request, 'site_setting', None)
+        site_name = getattr(site_setting, 'site_name', '') or 'AutoParts'
+        if self.category:
+            title = self.category.seo_title or f'Phu tung {self.category.name} chinh hang | {site_name}'
+            description = (
+                self.category.seo_description
+                or clean_text(self.category.description, 34)
+                or f'Danh muc phu tung {self.category.name} chinh hang, tu van dung ma, bao gia nhanh.'
+            )
+            breadcrumb_items = [
+                ('Trang chủ', reverse('core:home')),
+                ('Sản phẩm', reverse('products:list')),
+                (self.category.name, self.category.get_absolute_url()),
+            ]
+            canonical_path = self.category.get_absolute_url()
+        else:
+            title = f'San pham phu tung o to chinh hang | {site_name}'
+            description = 'Danh sach phu tung o to chinh hang, nhieu danh muc, ho tro tim theo ten san pham hoac SKU.'
+            breadcrumb_items = [
+                ('Trang chủ', reverse('core:home')),
+                ('Sản phẩm', reverse('products:list')),
+            ]
+            canonical_path = reverse('products:list')
+        robots = 'noindex,follow' if self.request.GET.get('q') else 'index,follow'
+        context.update(seo_context(
+            self.request,
+            title=title,
+            description=description,
+            canonical_path=canonical_path,
+            robots=robots,
+            json_ld=[
+                local_business_schema(self.request, site_setting),
+                breadcrumb_schema(self.request, breadcrumb_items),
+            ],
+        ))
         if context.get('is_paginated'):
             context['page_range'] = context['paginator'].get_elided_page_range(
                 context['page_obj'].number,
@@ -85,6 +123,33 @@ class ProductDetailView(DetailView):
             is_active=True,
             category=self.object.category,
         ).exclude(pk=self.object.pk)[:4]
+        site_setting = getattr(self.request, 'site_setting', None)
+        site_name = getattr(site_setting, 'site_name', '') or 'AutoParts'
+        title = self.object.seo_title or f'{self.object.name} {self.object.sku} | {site_name}'
+        description = (
+            self.object.seo_description
+            or self.object.short_description
+            or clean_text(self.object.description, 34)
+            or f'{self.object.name} chinh hang, ma {self.object.sku}, tu van va bao gia nhanh.'
+        )
+        breadcrumb_items = [
+            ('Trang chủ', reverse('core:home')),
+            ('Sản phẩm', reverse('products:list')),
+            (self.object.category.name, self.object.category.get_absolute_url()),
+            (self.object.name, self.object.get_absolute_url()),
+        ]
+        context.update(seo_context(
+            self.request,
+            title=title,
+            description=description,
+            image=self.object.image.url if self.object.image else '',
+            canonical_path=self.object.get_absolute_url(),
+            og_type='product',
+            json_ld=[
+                product_schema(self.request, self.object),
+                breadcrumb_schema(self.request, breadcrumb_items),
+            ],
+        ))
         return context
 
 # Create your views here.

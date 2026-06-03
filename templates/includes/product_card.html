@@ -3,9 +3,9 @@
 <article class="product-card">
     <a class="product-image" href="{{ product.get_absolute_url }}">
         {% if product.image %}
-            <img src="{{ product.image.url }}" alt="{{ product.name }}">
+            <img src="{{ product.image.url }}" alt="{{ product.name }} - {{ product.sku }}" loading="lazy" decoding="async">
         {% else %}
-            <img src="{% static 'images/product.png' %}" alt="{{ product.name }}">
+            <img src="{% static 'images/product.png' %}" alt="{{ product.name }} - {{ product.sku }}" loading="lazy" decoding="async">
         {% endif %}
     </a>
     <div class="product-info">

@@ -11,6 +11,8 @@ class SiteSetting(models.Model):
     facebook_url = models.URLField('Facebook', blank=True)
     zalo_url = models.URLField('Zalo', blank=True)
     tiktok_url = models.URLField('TikTok', blank=True)
+    google_business_url = models.URLField('Google Business Profile', blank=True)
+    seo_description = models.CharField('SEO description mac dinh', max_length=255, blank=True)
     google_map_iframe = models.TextField('Google Maps iframe', blank=True)
 
     class Meta:

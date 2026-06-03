@@ -1,20 +1,70 @@
 from django.shortcuts import get_object_or_404, render
+from django.urls import reverse
 
 from .models import AboutPage, PromotionPost
+from core.seo import breadcrumb_schema, clean_text, local_business_schema, seo_context
 
 
 def about(request):
     page = AboutPage.objects.first()
-    return render(request, 'about.html', {'page': page})
+    site_setting = getattr(request, 'site_setting', None)
+    title = f'{page.title if page else "Gioi thieu"} | {getattr(site_setting, "site_name", "") or "AutoParts"}'
+    description = clean_text(page.content if page else '', 34) or 'Gioi thieu don vi cung cap phu tung o to chinh hang.'
+    return render(request, 'about.html', {
+        'page': page,
+        **seo_context(
+            request,
+            title=title,
+            description=description,
+            image=page.image.url if page and page.image else '',
+            canonical_path=reverse('pages:about'),
+            json_ld=[
+                local_business_schema(request, site_setting),
+                breadcrumb_schema(request, [('Trang chủ', reverse('core:home')), ('Giới thiệu', reverse('pages:about'))]),
+            ],
+        ),
+    })
 
 
 def promotion(request):
     posts = PromotionPost.objects.filter(is_active=True)
-    return render(request, 'promotion.html', {'posts': posts})
+    site_setting = getattr(request, 'site_setting', None)
+    return render(request, 'promotion.html', {
+        'posts': posts,
+        **seo_context(
+            request,
+            title=f'Khuyen mai phu tung o to | {getattr(site_setting, "site_name", "") or "AutoParts"}',
+            description='Cap nhat uu dai, khuyen mai va chuong trinh bao gia phu tung o to.',
+            canonical_path=reverse('promotion'),
+            json_ld=[
+                local_business_schema(request, site_setting),
+                breadcrumb_schema(request, [('Trang chủ', reverse('core:home')), ('Khuyến mãi', reverse('promotion'))]),
+            ],
+        ),
+    })
 
 
 def promotion_detail(request, slug):
     post = get_object_or_404(PromotionPost, slug=slug, is_active=True)
-    return render(request, 'promotion_detail.html', {'post': post})
+    site_setting = getattr(request, 'site_setting', None)
+    description = post.summary or clean_text(post.content, 34)
+    return render(request, 'promotion_detail.html', {
+        'post': post,
+        **seo_context(
+            request,
+            title=f'{post.title} | {getattr(site_setting, "site_name", "") or "AutoParts"}',
+            description=description,
+            image=post.image.url if post.image else '',
+            canonical_path=post.get_absolute_url(),
+            og_type='article',
+            json_ld=[
+                breadcrumb_schema(request, [
+                    ('Trang chủ', reverse('core:home')),
+                    ('Khuyến mãi', reverse('promotion')),
+                    (post.title, post.get_absolute_url()),
+                ]),
+            ],
+        ),
+    })
 
 # Create your views here.
