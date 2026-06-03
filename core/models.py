@@ -17,6 +17,7 @@ class SiteSetting(models.Model):
     linkedin_url = models.URLField('LinkedIn', blank=True)
     google_business_url = models.URLField('Google Business Profile', blank=True)
     seo_description = models.CharField('SEO description mac dinh', max_length=255, blank=True)
+    google_analytics_id = models.CharField('Google Analytics Measurement ID', max_length=32, blank=True)
     google_map_iframe = models.TextField('Google Maps iframe', blank=True)
 
     class Meta:

@@ -24,6 +24,7 @@ from pages import views as page_views
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('robots.txt', core_views.robots_txt, name='robots_txt'),
+    path('llms.txt', core_views.llms_txt, name='llms_txt'),
     path('sitemap.xml', core_views.sitemap_xml, name='sitemap_xml'),
     path('', include('core.urls')),
     path('san-pham/', include('products.urls')),

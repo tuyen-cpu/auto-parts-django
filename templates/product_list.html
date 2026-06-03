@@ -32,22 +32,6 @@
         {% endfor %}
     </aside>
     <div>
-        {% if current_category and current_category.description %}
-            <section class="category-seo-copy">
-                <h1>{{ current_category.name }}</h1>
-                <div>{{ current_category.description|safe }}</div>
-            </section>
-        {% elif current_category %}
-            <section class="category-seo-copy">
-                <h1>{{ current_category.name }}</h1>
-                <p>Danh mục phụ tùng {{ current_category.name }} chính hãng, hỗ trợ tư vấn đúng mã và báo giá nhanh.</p>
-            </section>
-        {% else %}
-            <section class="category-seo-copy">
-                <h1>Sản phẩm phụ tùng ô tô</h1>
-                <p>Tìm phụ tùng ô tô theo danh mục, tên sản phẩm hoặc SKU. Đội ngũ tư vấn hỗ trợ chọn đúng mã và báo giá nhanh.</p>
-            </section>
-        {% endif %}
         <div class="product-grid">
             {% for product in products %}
                 {% include "includes/product_card.html" %}

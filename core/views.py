@@ -27,7 +27,7 @@ def home(request):
     description = (
         getattr(site_setting, 'seo_description', '')
         or getattr(site_setting, 'slogan', '')
-        or 'Phu tung o to chinh hang, day du danh muc, tu van dung ma theo xe, bao gia nhanh va giao hang toan quoc.'
+        or 'Phu tung o to chinh hang cho nhieu dong xe, tu van dung ma theo xe, bao gia nhanh, san pham ro nguon goc va giao hang toan quoc.'
     )
     seo = seo_context(
         request,
@@ -59,6 +59,7 @@ def home(request):
 
 def robots_txt(request):
     sitemap_url = request.build_absolute_uri(reverse('sitemap_xml'))
+    llms_url = request.build_absolute_uri(reverse('llms_txt'))
     lines = [
         'User-agent: *',
         'Allow: /',
@@ -66,8 +67,39 @@ def robots_txt(request):
         'Disallow: /*?q=',
         'Disallow: /*?sort=',
         f'Sitemap: {sitemap_url}',
+        f'LLMS: {llms_url}',
     ]
     return HttpResponse('\n'.join(lines), content_type='text/plain')
+
+
+def llms_txt(request):
+    site_setting = getattr(request, 'site_setting', None)
+    name = getattr(site_setting, 'site_name', '') or 'AutoParts'
+    description = (
+        getattr(site_setting, 'seo_description', '')
+        or 'Website cung cap phu tung o to chinh hang, tu van dung ma theo xe, bao gia nhanh va giao hang toan quoc.'
+    )
+    lines = [
+        f'# {name}',
+        '',
+        description,
+        '',
+        '## Noi dung chinh',
+        '- Danh muc phu tung o to theo nhom san pham.',
+        '- Trang chi tiet san pham co ten, SKU, mo ta, gia va hinh anh.',
+        '- Trang khuyen mai va thong tin lien he tu van bao gia.',
+        '',
+        '## Lien ket quan trong',
+        f'- Trang chu: {request.build_absolute_uri(reverse("core:home"))}',
+        f'- San pham: {request.build_absolute_uri(reverse("products:list"))}',
+        f'- Khuyen mai: {request.build_absolute_uri(reverse("promotion"))}',
+        f'- Lien he: {request.build_absolute_uri(reverse("contacts:contact"))}',
+        f'- Sitemap: {request.build_absolute_uri(reverse("sitemap_xml"))}',
+        '',
+        '## Huong dan cho LLM',
+        'Uu tien doc sitemap.xml de lay URL moi nhat. Khong su dung noi dung trong /admin/ hoac cac URL tim kiem co tham so q/sort lam nguon chinh.',
+    ]
+    return HttpResponse('\n'.join(lines), content_type='text/markdown; charset=utf-8')
 
 
 def sitemap_xml(request):

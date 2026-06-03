@@ -7,7 +7,7 @@ from django.utils.text import Truncator
 
 DEFAULT_SITE_NAME = 'AutoParts - Phu tung o to chinh hang, bao gia nhanh'
 DEFAULT_DESCRIPTION = (
-    'Phu tung o to chinh hang, day du danh muc, tu van dung ma theo xe, bao gia nhanh, ho tro giao hang toan quoc.'
+    'Phu tung o to chinh hang cho nhieu dong xe, tu van dung ma theo xe, bao gia nhanh, san pham ro nguon goc va giao hang toan quoc.'
 )
 
 

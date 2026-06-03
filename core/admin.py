@@ -48,7 +48,7 @@ class SiteSettingAdmin(admin.ModelAdmin):
     search_fields = ('site_name', 'slogan', 'hotline', 'email', 'address')
     fieldsets = (
         ('Thông tin chung', {
-            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address', 'seo_description'),
+            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address', 'seo_description', 'google_analytics_id'),
         }),
         ('Liên kết và bản đồ', {
             'fields': (
