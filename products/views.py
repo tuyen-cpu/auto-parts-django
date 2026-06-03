@@ -20,7 +20,7 @@ class ProductListView(ListView):
     model = Product
     template_name = 'product_list.html'
     context_object_name = 'products'
-    paginate_by = 8
+    paginate_by = 39
 
     def get_queryset(self):
         queryset = Product.objects.filter(is_active=True).select_related('category', 'category__parent')
