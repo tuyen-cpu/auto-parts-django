@@ -1,8 +1,8 @@
-from django.shortcuts import get_object_or_404, render
+﻿from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 
 from .models import AboutPage, PromotionPost
-from core.seo import breadcrumb_schema, clean_text, local_business_schema, seo_context
+from core.seo import article_schema, breadcrumb_schema, clean_text, item_list_schema, local_business_schema, seo_context
 
 
 def about(request):
@@ -20,7 +20,7 @@ def about(request):
             canonical_path=reverse('pages:about'),
             json_ld=[
                 local_business_schema(request, site_setting),
-                breadcrumb_schema(request, [('Trang chủ', reverse('core:home')), ('Giới thiệu', reverse('pages:about'))]),
+                breadcrumb_schema(request, [('Trang chá»§', reverse('core:home')), ('Giá»›i thiá»‡u', reverse('pages:about'))]),
             ],
         ),
     })
@@ -38,7 +38,8 @@ def promotion(request):
             canonical_path=reverse('promotion'),
             json_ld=[
                 local_business_schema(request, site_setting),
-                breadcrumb_schema(request, [('Trang chủ', reverse('core:home')), ('Khuyến mãi', reverse('promotion'))]),
+                item_list_schema(request, posts, name='Khuyen mai phu tung o to'),
+                breadcrumb_schema(request, [('Trang chá»§', reverse('core:home')), ('Khuyáº¿n mÃ£i', reverse('promotion'))]),
             ],
         ),
     })
@@ -58,9 +59,10 @@ def promotion_detail(request, slug):
             canonical_path=post.get_absolute_url(),
             og_type='article',
             json_ld=[
+                article_schema(request, post),
                 breadcrumb_schema(request, [
-                    ('Trang chủ', reverse('core:home')),
-                    ('Khuyến mãi', reverse('promotion')),
+                    ('Trang chá»§', reverse('core:home')),
+                    ('Khuyáº¿n mÃ£i', reverse('promotion')),
                     (post.title, post.get_absolute_url()),
                 ]),
             ],

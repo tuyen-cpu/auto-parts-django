@@ -4,9 +4,9 @@
 {% block content %}
 <section class="home-hero">
     {% if hero_banner.image %}
-        <img class="home-hero-image" src="{{ hero_banner.image.url }}" alt="{{ hero_banner.title }}">
+        <img class="home-hero-image" src="{{ hero_banner.image.url }}" alt="{{ hero_banner.title }}" fetchpriority="high" decoding="async">
     {% else %}
-        <img class="home-hero-image" src="{% static 'images/hero-parts-banner.jpg' %}" alt="{{ hero_banner.title|default:'Phụ tùng ô tô' }}">
+        <img class="home-hero-image" src="{% static 'images/hero-parts-banner.jpg' %}" alt="{{ hero_banner.title|default:'Phụ tùng ô tô' }}" fetchpriority="high" decoding="async">
     {% endif %}
     <div class="container home-hero-inner">
         <div class="home-hero-copy">
@@ -65,17 +65,21 @@
         </div>
         <a href="{% url 'products:list' %}">Tất cả sản phẩm →</a>
     </div>
-    <div class="category-grid">
-        {% for category in parent_categories %}
-            <a class="category-tile" href="{{ category.get_absolute_url }}">
-                <span>{{ category.name }}</span>
-                {% if category.child_count %}
-                    <small>{{ category.child_count }} nhóm sản phẩm</small>
-                {% else %}
-                    <small>{{ category.direct_product_count }} sản phẩm</small>
-                {% endif %}
-            </a>
-        {% endfor %}
+    <div class="category-slider" data-category-slider>
+        <button class="category-slider-button category-slider-prev" type="button" data-category-prev aria-label="Danh mục trước">‹</button>
+        <div class="category-grid" data-category-track>
+            {% for category in parent_categories %}
+                <a class="category-tile" href="{{ category.get_absolute_url }}">
+                    <span>{{ category.name }}</span>
+                    {% if category.child_count %}
+                        <small>{{ category.child_count }} nhóm sản phẩm</small>
+                    {% else %}
+                        <small>{{ category.direct_product_count }} sản phẩm</small>
+                    {% endif %}
+                </a>
+            {% endfor %}
+        </div>
+        <button class="category-slider-button category-slider-next" type="button" data-category-next aria-label="Danh mục sau">›</button>
     </div>
 </section>
 {#<section class="container section-block">#}
@@ -118,4 +122,46 @@
         <a class="primary-button" href="{% url 'contacts:contact' %}">Liên hệ ngay</a>
     </div>
 </section>
+<script>
+document.querySelectorAll('[data-category-slider]').forEach(function (slider) {
+    var track = slider.querySelector('[data-category-track]');
+    var prev = slider.querySelector('[data-category-prev]');
+    var next = slider.querySelector('[data-category-next]');
+
+    if (!track || !prev || !next) {
+        return;
+    }
+
+    function updateButtons() {
+        var hasOverflow = track.scrollWidth > track.clientWidth + 2;
+        prev.hidden = !hasOverflow;
+        next.hidden = !hasOverflow;
+
+        if (!hasOverflow) {
+            return;
+        }
+
+        var maxScroll = track.scrollWidth - track.clientWidth - 2;
+        prev.disabled = track.scrollLeft <= 2;
+        next.disabled = track.scrollLeft >= maxScroll;
+    }
+
+    function slide(direction) {
+        track.scrollBy({
+            left: direction * Math.max(track.clientWidth * 0.85, 260),
+            behavior: 'smooth'
+        });
+    }
+
+    prev.addEventListener('click', function () {
+        slide(-1);
+    });
+    next.addEventListener('click', function () {
+        slide(1);
+    });
+    track.addEventListener('scroll', updateButtons, { passive: true });
+    window.addEventListener('resize', updateButtons);
+    updateButtons();
+});
+</script>
 {% endblock %}

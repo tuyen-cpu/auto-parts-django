@@ -1,15 +1,13 @@
 import json
 import re
-
-from django.conf import settings
 from django.urls import reverse
 from django.utils.html import strip_tags
 from django.utils.text import Truncator
 
 
-DEFAULT_SITE_NAME = 'AutoParts'
+DEFAULT_SITE_NAME = 'AutoParts - Phu tung o to chinh hang, bao gia nhanh'
 DEFAULT_DESCRIPTION = (
-    'Phu tung o to chinh hang, day du danh muc, tu van dung ma, bao gia nhanh va giao hang toan quoc.'
+    'Phu tung o to chinh hang, day du danh muc, tu van dung ma theo xe, bao gia nhanh, ho tro giao hang toan quoc.'
 )
 
 
@@ -105,11 +103,67 @@ def local_business_schema(request, site_setting=None):
             getattr(site_setting, 'facebook_url', ''),
             getattr(site_setting, 'zalo_url', ''),
             getattr(site_setting, 'tiktok_url', ''),
+            getattr(site_setting, 'instagram_url', ''),
+            getattr(site_setting, 'youtube_url', ''),
+            getattr(site_setting, 'x_url', ''),
+            getattr(site_setting, 'linkedin_url', ''),
             getattr(site_setting, 'google_business_url', ''),
         ] if url
     ]
     if same_as:
         schema['sameAs'] = same_as
+    return schema
+
+
+def website_schema(request, site_setting=None):
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        'name': site_name(site_setting),
+        'url': absolute_url(request, reverse('core:home')),
+        'description': site_description(site_setting),
+        'potentialAction': {
+            '@type': 'SearchAction',
+            'target': f'{absolute_url(request, reverse("products:list"))}?q={{search_term_string}}',
+            'query-input': 'required name=search_term_string',
+        },
+    }
+
+
+def item_list_schema(request, items, *, name='Danh sach san pham'):
+    return {
+        '@context': 'https://schema.org',
+        '@type': 'ItemList',
+        'name': name,
+        'itemListElement': [
+            {
+                '@type': 'ListItem',
+                'position': index,
+                'url': absolute_url(request, item.get_absolute_url()),
+                'name': getattr(item, 'name', getattr(item, 'title', '')),
+            }
+            for index, item in enumerate(items, start=1)
+        ],
+    }
+
+
+def article_schema(request, post):
+    image = media_absolute_url(request, post.image)
+    schema = {
+        '@context': 'https://schema.org',
+        '@type': 'Article',
+        'headline': post.title,
+        'description': post.summary or clean_text(post.content, 34),
+        'url': absolute_url(request, post.get_absolute_url()),
+        'datePublished': post.created_at.isoformat(),
+        'dateModified': post.updated_at.isoformat(),
+        'publisher': {
+            '@type': 'Organization',
+            'name': site_name(getattr(request, 'site_setting', None)),
+        },
+    }
+    if image:
+        schema['image'] = [image]
     return schema
 
 
@@ -147,13 +201,24 @@ def product_schema(request, product):
             '@type': 'Offer',
             'url': absolute_url(request, product.get_absolute_url()),
             'availability': 'https://schema.org/InStock',
+            'itemCondition': 'https://schema.org/NewCondition',
             'priceCurrency': 'VND',
+            'seller': {
+                '@type': 'Organization',
+                'name': site_name(getattr(request, 'site_setting', None)),
+            },
         },
     }
     if image:
         schema['image'] = [image]
     if product.display_price:
         schema['offers']['price'] = str(product.display_price)
+    if product.rating:
+        schema['aggregateRating'] = {
+            '@type': 'AggregateRating',
+            'ratingValue': str(product.rating),
+            'reviewCount': '1',
+        }
     return schema
 
 

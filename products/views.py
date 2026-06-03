@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
-from core.seo import breadcrumb_schema, clean_text, local_business_schema, product_schema, seo_context
+from core.seo import breadcrumb_schema, clean_text, item_list_schema, local_business_schema, product_schema, seo_context
 
 from .models import Category, Product, ProductImage
 
@@ -67,11 +67,11 @@ class ProductListView(ListView):
         site_setting = getattr(self.request, 'site_setting', None)
         site_name = getattr(site_setting, 'site_name', '') or 'AutoParts'
         if self.category:
-            title = self.category.seo_title or f'Phu tung {self.category.name} chinh hang | {site_name}'
+            title = self.category.seo_title or f'Phu tung {self.category.name} chinh hang, bao gia nhanh | {site_name}'
             description = (
                 self.category.seo_description
                 or clean_text(self.category.description, 34)
-                or f'Danh muc phu tung {self.category.name} chinh hang, tu van dung ma, bao gia nhanh.'
+                or f'Danh muc phu tung {self.category.name} chinh hang, tu van dung ma theo xe, bao gia nhanh va giao hang toan quoc.'
             )
             breadcrumb_items = [
                 ('Trang chủ', reverse('core:home')),
@@ -80,8 +80,8 @@ class ProductListView(ListView):
             ]
             canonical_path = self.category.get_absolute_url()
         else:
-            title = f'San pham phu tung o to chinh hang | {site_name}'
-            description = 'Danh sach phu tung o to chinh hang, nhieu danh muc, ho tro tim theo ten san pham hoac SKU.'
+            title = f'San pham phu tung o to chinh hang, bao gia nhanh | {site_name}'
+            description = 'Danh sach phu tung o to chinh hang, nhieu danh muc, ho tro tim theo ten san pham hoac SKU, tu van dung ma theo xe.'
             breadcrumb_items = [
                 ('Trang chủ', reverse('core:home')),
                 ('Sản phẩm', reverse('products:list')),
@@ -97,6 +97,11 @@ class ProductListView(ListView):
             json_ld=[
                 local_business_schema(self.request, site_setting),
                 breadcrumb_schema(self.request, breadcrumb_items),
+                item_list_schema(
+                    self.request,
+                    context['products'],
+                    name=self.category.name if self.category else 'San pham phu tung o to',
+                ),
             ],
         ))
         if context.get('is_paginated'):
@@ -130,7 +135,7 @@ class ProductDetailView(DetailView):
             self.object.seo_description
             or self.object.short_description
             or clean_text(self.object.description, 34)
-            or f'{self.object.name} chinh hang, ma {self.object.sku}, tu van va bao gia nhanh.'
+            or f'{self.object.name} chinh hang, ma {self.object.sku}, tu van dung ma theo xe, bao gia nhanh va ho tro giao hang toan quoc.'
         )
         breadcrumb_items = [
             ('Trang chủ', reverse('core:home')),

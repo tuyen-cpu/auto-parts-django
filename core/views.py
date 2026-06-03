@@ -2,13 +2,14 @@ from django.http import HttpResponse
 from django.shortcuts import render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.html import escape
 from django.db.models import Count, Q
 
 from pages.models import AboutPage, PromotionPost
 from products.models import Category, Product
 
 from .models import Banner
-from .seo import local_business_schema, seo_context
+from .seo import local_business_schema, seo_context, website_schema
 
 
 def home(request):
@@ -22,11 +23,11 @@ def home(request):
     new_products = Product.objects.filter(is_active=True).select_related('category')[:9]
     about = AboutPage.objects.first()
     site_setting = getattr(request, 'site_setting', None)
-    title = f'{getattr(site_setting, "site_name", "") or "AutoParts"} - Phu tung o to chinh hang'
+    title = f'{getattr(site_setting, "site_name", "") or "AutoParts"} - Phu tung o to chinh hang, bao gia nhanh'
     description = (
         getattr(site_setting, 'seo_description', '')
         or getattr(site_setting, 'slogan', '')
-        or 'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh, giao hang toan quoc.'
+        or 'Phu tung o to chinh hang, day du danh muc, tu van dung ma theo xe, bao gia nhanh va giao hang toan quoc.'
     )
     seo = seo_context(
         request,
@@ -34,7 +35,10 @@ def home(request):
         description=description,
         image=hero_banner.image.url if hero_banner and hero_banner.image else '',
         canonical_path=request.path,
-        json_ld=[local_business_schema(request, site_setting)],
+        json_ld=[
+            local_business_schema(request, site_setting),
+            website_schema(request, site_setting),
+        ],
     )
     return render(
         request,
@@ -99,7 +103,7 @@ def sitemap_xml(request):
         lastmod = item['lastmod'] or now
         body.extend([
             '  <url>',
-            f'    <loc>{item["loc"]}</loc>',
+            f'    <loc>{escape(item["loc"])}</loc>',
             f'    <lastmod>{lastmod.date().isoformat()}</lastmod>',
             f'    <changefreq>{item["changefreq"]}</changefreq>',
             f'    <priority>{item["priority"]}</priority>',

@@ -14,7 +14,7 @@
 {% block content %}
 <article class="container promotion-detail">
     {% if post.image %}
-        <img class="promotion-detail-image" src="{{ post.image.url }}" alt="{{ post.title }}">
+        <img class="promotion-detail-image" src="{{ post.image.url }}" alt="{{ post.title }}" fetchpriority="high" decoding="async">
     {% endif %}
     <h1>{{ post.title }}</h1>
     {% if post.summary %}

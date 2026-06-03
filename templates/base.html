@@ -5,12 +5,18 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#c2410c">
+    <meta name="format-detection" content="telephone=yes">
     <title>{% block title %}{{ seo.title|default:site_setting.site_name|default:"AutoParts" }}{% endblock %}</title>
     <meta name="description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
     <meta name="robots" content="{{ seo.robots|default:'index,follow' }}">
     {% if seo.canonical_url %}
         <link rel="canonical" href="{{ seo.canonical_url }}">
+        <link rel="alternate" hreflang="vi-VN" href="{{ seo.canonical_url }}">
+        <link rel="alternate" hreflang="x-default" href="{{ seo.canonical_url }}">
     {% endif %}
+    <link rel="icon" type="image/png" sizes="64x64" href="{% static 'images/favicon.png' %}">
+    <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:type" content="{{ seo.og_type|default:'website' }}">
     <meta property="og:title" content="{{ seo.title|default:site_setting.site_name|default:'AutoParts' }}">
@@ -32,7 +38,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260601-16">
+    <link rel="preload" href="{% static 'css/site.css' %}?v=20260603-seo" as="style">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}?v=20260603-seo">
 </head>
 <body>
     <header class="site-header">
@@ -178,6 +185,15 @@
                 <h3>Liên hệ</h3>
                 <p>{{ site_setting.hotline|default:"0901 234 567" }}</p>
                 <p>{{ site_setting.email|default:"sales@autoparts.test" }}</p>
+                <div class="footer-social">
+                    {% if site_setting.facebook_url %}<a href="{{ site_setting.facebook_url }}" target="_blank" rel="noopener">Facebook</a>{% endif %}
+                    {% if site_setting.instagram_url %}<a href="{{ site_setting.instagram_url }}" target="_blank" rel="noopener">Instagram</a>{% endif %}
+                    {% if site_setting.youtube_url %}<a href="{{ site_setting.youtube_url }}" target="_blank" rel="noopener">YouTube</a>{% endif %}
+                    {% if site_setting.x_url %}<a href="{{ site_setting.x_url }}" target="_blank" rel="noopener">X</a>{% endif %}
+                    {% if site_setting.linkedin_url %}<a href="{{ site_setting.linkedin_url }}" target="_blank" rel="noopener">LinkedIn</a>{% endif %}
+                    {% if site_setting.tiktok_url %}<a href="{{ site_setting.tiktok_url }}" target="_blank" rel="noopener">TikTok</a>{% endif %}
+                    {% if site_setting.zalo_url %}<a href="{{ site_setting.zalo_url }}" target="_blank" rel="noopener">Zalo</a>{% endif %}
+                </div>
             </div>
             {% if site_setting.google_map_iframe %}
                 <div class="footer-map">
@@ -188,7 +204,11 @@
         </div>
     </footer>
     <script>
+        document.addEventListener('DOMContentLoaded', () => {
         const siteHeader = document.querySelector('.site-header');
+        if (!siteHeader) {
+            return;
+        }
 
         let isHeaderSticky = false;
 
@@ -218,6 +238,7 @@
         menuToggle?.addEventListener('click', () => setMobileMenu(true));
         closeMenuButtons.forEach((button) => {
             button.addEventListener('click', () => setMobileMenu(false));
+        });
         });
     </script>
     {% block extra_scripts %}{% endblock %}
