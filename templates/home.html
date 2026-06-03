@@ -78,22 +78,22 @@
         {% endfor %}
     </div>
 </section>
-<section class="container section-block">
-    <div class="section-heading">
-        <div>
-            <p>Sản phẩm nổi bật</p>
-            <h2>Phụ tùng bán chạy</h2>
-        </div>
-        <a href="{% url 'products:list' %}">Xem tất cả →</a>
-    </div>
-    <div class="product-grid">
-        {% for product in featured_products %}
-            {% include "includes/product_card.html" %}
-        {% empty %}
-            <p>Chưa có sản phẩm nổi bật.</p>
-        {% endfor %}
-    </div>
-</section>
+{#<section class="container section-block">#}
+{#    <div class="section-heading">#}
+{#        <div>#}
+{#            <p>Sản phẩm nổi bật</p>#}
+{#            <h2>Phụ tùng bán chạy</h2>#}
+{#        </div>#}
+{#        <a href="{% url 'products:list' %}">Xem tất cả →</a>#}
+{#    </div>#}
+{#    <div class="product-grid">#}
+{#        {% for product in featured_products %}#}
+{#            {% include "includes/product_card.html" %}#}
+{#        {% empty %}#}
+{#            <p>Chưa có sản phẩm nổi bật.</p>#}
+{#        {% endfor %}#}
+{#    </div>#}
+{#</section>#}
 
 
 
