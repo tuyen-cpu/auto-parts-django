@@ -1,7 +1,7 @@
 ﻿﻿{% extends "base.html" %}
 {% load product_extras %}
 {% load static %}
-{% block title %}{{ seo.title|default:site_setting.site_name|default:"AutoParts" }}{% endblock %}
+{% block title %}{{ seo.title|default:site_setting.seo_title|default:site_setting.site_name|default:"AutoParts" }}{% endblock %}
 {% block breadcrumb %}
 <nav class="breadcrumb-wrap" aria-label="Breadcrumb">
     <div class="container breadcrumb">

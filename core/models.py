@@ -4,6 +4,8 @@ from django.db import models
 class SiteSetting(models.Model):
     site_name = models.CharField('tên website', max_length=160, default='AutoParts')
     slogan = models.CharField('slogan', max_length=180, blank=True, default='Phụ tùng chính hãng - Đồng hành mọi hành trình')
+    seo_title = models.CharField('SEO title trang chu', max_length=180, blank=True)
+    description = models.TextField('description', blank=True)
     logo = models.ImageField('logo', upload_to='site/', blank=True)
     hotline = models.CharField('hotline', max_length=40, blank=True)
     email = models.EmailField('email', blank=True)

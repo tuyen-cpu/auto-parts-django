@@ -38,9 +38,41 @@ def site_name(site_setting=None):
     return getattr(site_setting, 'site_name', '') or DEFAULT_SITE_NAME
 
 
+def get_site_setting(request):
+    site_setting = getattr(request, 'site_setting', None)
+    if site_setting is None:
+        from .models import SiteSetting
+
+        site_setting = SiteSetting.objects.first()
+        request.site_setting = site_setting
+    return site_setting
+
+
+def site_title(site_setting=None):
+    return getattr(site_setting, 'seo_title', '') or site_name(site_setting)
+
+
+def format_title(title='', site_setting=None):
+    title = (title or '').strip()
+    resolved_site_title = site_title(site_setting)
+    if not title or title == resolved_site_title:
+        return resolved_site_title
+    return f'{title} | {resolved_site_title}'
+
+
 def site_description(site_setting=None):
     return (
         getattr(site_setting, 'seo_description', '')
+        or getattr(site_setting, 'description', '')
+        or getattr(site_setting, 'slogan', '')
+        or DEFAULT_DESCRIPTION
+    )
+
+
+def site_summary(site_setting=None):
+    return (
+        getattr(site_setting, 'description', '')
+        or getattr(site_setting, 'seo_description', '')
         or getattr(site_setting, 'slogan', '')
         or DEFAULT_DESCRIPTION
     )
@@ -57,7 +89,7 @@ def seo_context(
     robots='index,follow',
     json_ld=None,
 ):
-    site_setting = getattr(request, 'site_setting', None)
+    site_setting = get_site_setting(request)
     resolved_description = clean_text(description, 34) or site_description(site_setting)
     canonical_url = absolute_url(request, canonical_path or request.path)
     image_url = absolute_url(request, image) if image else ''
@@ -82,7 +114,7 @@ def local_business_schema(request, site_setting=None):
         '@type': 'AutoPartsStore',
         'name': name,
         'url': absolute_url(request, reverse('core:home')),
-        'description': site_description(site_setting),
+        'description': site_summary(site_setting),
     }
     logo = media_absolute_url(request, getattr(site_setting, 'logo', None))
     if logo:
@@ -121,7 +153,7 @@ def website_schema(request, site_setting=None):
         '@type': 'WebSite',
         'name': site_name(site_setting),
         'url': absolute_url(request, reverse('core:home')),
-        'description': site_description(site_setting),
+        'description': site_summary(site_setting),
         'potentialAction': {
             '@type': 'SearchAction',
             'target': f'{absolute_url(request, reverse("products:list"))}?q={{search_term_string}}',

@@ -45,10 +45,10 @@ class RestrictedGroupAdmin(NoManagerAuthMixin, GroupAdmin):
 @admin.register(SiteSetting)
 class SiteSettingAdmin(admin.ModelAdmin):
     list_display = ('site_name', 'slogan', 'hotline', 'email', 'address')
-    search_fields = ('site_name', 'slogan', 'hotline', 'email', 'address')
+    search_fields = ('site_name', 'slogan', 'seo_title', 'description', 'seo_description', 'hotline', 'email', 'address')
     fieldsets = (
         ('Thông tin chung', {
-            'fields': ('site_name', 'slogan', 'logo', 'hotline', 'email', 'address', 'seo_description', 'google_analytics_id'),
+            'fields': ('site_name', 'slogan', 'seo_title', 'description', 'seo_description', 'logo', 'hotline', 'email', 'address', 'google_analytics_id'),
         }),
         ('Liên kết và bản đồ', {
             'fields': (

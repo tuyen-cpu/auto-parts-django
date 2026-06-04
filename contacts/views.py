@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 
 from .models import ContactMessage
-from core.seo import breadcrumb_schema, local_business_schema, seo_context
+from core.seo import breadcrumb_schema, format_title, get_site_setting, local_business_schema, seo_context
 
 
 class ContactForm(forms.ModelForm):
@@ -25,12 +25,12 @@ def contact(request):
         form.save()
         messages.success(request, 'Cảm ơn bạn đã liên hệ. Chúng tôi sẽ phản hồi sớm.')
         return redirect('contacts:contact')
-    site_setting = getattr(request, 'site_setting', None)
+    site_setting = get_site_setting(request)
     return render(request, 'contact.html', {
         'form': form,
         **seo_context(
             request,
-            title=f'Lien he bao gia phu tung o to | {getattr(site_setting, "site_name", "") or "AutoParts"}',
+            title=format_title('Lien he bao gia phu tung o to', site_setting),
             description='Lien he tu van, bao gia phu tung o to chinh hang va ho tro tim dung ma san pham.',
             canonical_path=reverse('contacts:contact'),
             json_ld=[

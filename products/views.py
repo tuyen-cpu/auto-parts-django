@@ -5,7 +5,7 @@ from django.shortcuts import get_object_or_404, render
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
-from core.seo import breadcrumb_schema, clean_text, item_list_schema, local_business_schema, product_schema, seo_context
+from core.seo import breadcrumb_schema, clean_text, format_title, get_site_setting, item_list_schema, local_business_schema, product_schema, seo_context
 
 from .models import Category, Product, ProductImage
 
@@ -64,10 +64,9 @@ class ProductListView(ListView):
         context['categories'] = Category.objects.filter(is_active=True, parent__isnull=True).prefetch_related('children')
         context['q'] = self.request.GET.get('q', '')
         context['sort'] = self.request.GET.get('sort', 'newest')
-        site_setting = getattr(self.request, 'site_setting', None)
-        site_name = getattr(site_setting, 'site_name', '') or 'AutoParts'
+        site_setting = get_site_setting(self.request)
         if self.category:
-            title = self.category.seo_title or f'Phu tung {self.category.name} chinh hang, bao gia nhanh | {site_name}'
+            title = self.category.seo_title or format_title(f'Phu tung {self.category.name} chinh hang, bao gia nhanh', site_setting)
             description = (
                 self.category.seo_description
                 or clean_text(self.category.description, 34)
@@ -80,7 +79,7 @@ class ProductListView(ListView):
             ]
             canonical_path = self.category.get_absolute_url()
         else:
-            title = f'San pham phu tung o to chinh hang, bao gia nhanh | {site_name}'
+            title = format_title('San pham phu tung o to chinh hang, bao gia nhanh', site_setting)
             description = 'Danh sach phu tung o to chinh hang, nhieu danh muc, ho tro tim theo ten san pham hoac SKU, tu van dung ma theo xe.'
             breadcrumb_items = [
                 ('Trang chủ', reverse('core:home')),
@@ -128,9 +127,8 @@ class ProductDetailView(DetailView):
             is_active=True,
             category=self.object.category,
         ).exclude(pk=self.object.pk)[:4]
-        site_setting = getattr(self.request, 'site_setting', None)
-        site_name = getattr(site_setting, 'site_name', '') or 'AutoParts'
-        title = self.object.seo_title or f'{self.object.name} {self.object.sku} | {site_name}'
+        site_setting = get_site_setting(self.request)
+        title = self.object.seo_title or format_title(f'{self.object.name} {self.object.sku}', site_setting)
         description = (
             self.object.seo_description
             or self.object.short_description

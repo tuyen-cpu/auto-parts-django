@@ -7,8 +7,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="#c2410c">
     <meta name="format-detection" content="telephone=yes">
-    <title>{% block title %}{{ seo.title|default:site_setting.site_name|default:"AutoParts" }}{% endblock %}</title>
-    <meta name="description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
+    <title>{% block title %}{{ seo.title|default:site_setting.seo_title|default:site_setting.site_name|default:"AutoParts" }}{% endblock %}</title>
+    <meta name="description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
     <meta name="robots" content="{{ seo.robots|default:'index,follow' }}">
     {% if seo.canonical_url %}
         <link rel="canonical" href="{{ seo.canonical_url }}">
@@ -19,8 +19,8 @@
     <link rel="apple-touch-icon" href="{% static 'images/favicon.png' %}">
     <meta property="og:locale" content="vi_VN">
     <meta property="og:type" content="{{ seo.og_type|default:'website' }}">
-    <meta property="og:title" content="{{ seo.title|default:site_setting.site_name|default:'AutoParts' }}">
-    <meta property="og:description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
+    <meta property="og:title" content="{{ seo.title|default:site_setting.seo_title|default:site_setting.site_name|default:'AutoParts' }}">
+    <meta property="og:description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
     {% if seo.canonical_url %}
         <meta property="og:url" content="{{ seo.canonical_url }}">
     {% endif %}
@@ -30,8 +30,8 @@
         <meta name="twitter:image" content="{{ seo.image_url }}">
     {% endif %}
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="{{ seo.title|default:site_setting.site_name|default:'AutoParts' }}">
-    <meta name="twitter:description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
+    <meta name="twitter:title" content="{{ seo.title|default:site_setting.seo_title|default:site_setting.site_name|default:'AutoParts' }}">
+    <meta name="twitter:description" content="{{ seo.description|default:site_setting.seo_description|default:site_setting.description|default:site_setting.slogan|default:'Phu tung o to chinh hang, tu van dung ma, bao gia nhanh va giao hang toan quoc.' }}">
     {% for item in seo.json_ld %}
         <script type="application/ld+json">{{ item|json_ld }}</script>
     {% endfor %}

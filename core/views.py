@@ -9,7 +9,7 @@ from pages.models import AboutPage, PromotionPost
 from products.models import Category, Product
 
 from .models import Banner
-from .seo import local_business_schema, seo_context, website_schema
+from .seo import get_site_setting, local_business_schema, seo_context, site_description, site_title, website_schema
 
 
 def home(request):
@@ -22,13 +22,9 @@ def home(request):
     featured_products = Product.objects.filter(is_active=True, is_featured=True).select_related('category')[:9]
     new_products = Product.objects.filter(is_active=True).select_related('category')[:9]
     about = AboutPage.objects.first()
-    site_setting = getattr(request, 'site_setting', None)
-    title = f'{getattr(site_setting, "site_name", "") or "AutoParts"} - Phu tung o to chinh hang, bao gia nhanh'
-    description = (
-        getattr(site_setting, 'seo_description', '')
-        or getattr(site_setting, 'slogan', '')
-        or 'Phu tung o to chinh hang cho nhieu dong xe, tu van dung ma theo xe, bao gia nhanh, san pham ro nguon goc va giao hang toan quoc.'
-    )
+    site_setting = get_site_setting(request)
+    title = site_title(site_setting)
+    description = site_description(site_setting)
     seo = seo_context(
         request,
         title=title,
@@ -73,12 +69,9 @@ def robots_txt(request):
 
 
 def llms_txt(request):
-    site_setting = getattr(request, 'site_setting', None)
+    site_setting = get_site_setting(request)
     name = getattr(site_setting, 'site_name', '') or 'AutoParts'
-    description = (
-        getattr(site_setting, 'seo_description', '')
-        or 'Website cung cap phu tung o to chinh hang, tu van dung ma theo xe, bao gia nhanh va giao hang toan quoc.'
-    )
+    description = site_description(site_setting)
     lines = [
         f'# {name}',
         '',
